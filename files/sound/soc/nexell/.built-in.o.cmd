@@ -1,0 +1,1 @@
+cmd_sound/soc/nexell/built-in.o :=  arm-linux-gnueabi-ld -EL    -r -o sound/soc/nexell/built-in.o sound/soc/nexell/nexell-snd-pcm.o sound/soc/nexell/nexell-snd-i2s.o sound/soc/nexell/nexell-snd-wm8960.o 

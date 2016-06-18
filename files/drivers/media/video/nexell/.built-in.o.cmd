@@ -1,0 +1,1 @@
+cmd_drivers/media/video/nexell/built-in.o :=  arm-linux-gnueabi-ld -EL    -r -o drivers/media/video/nexell/built-in.o drivers/media/video/nexell/nx_vip_v4l2.o drivers/media/video/nexell/nx_vip_core.o drivers/media/video/nexell/poa030r.o drivers/media/video/nexell/hi161.o 

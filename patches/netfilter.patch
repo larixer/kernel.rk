@@ -1,0 +1,3074 @@
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_connmark.h kernel-2.6.33/include/linux/netfilter/xt_connmark.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_connmark.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_connmark.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,5 +1,5 @@
+-#ifndef _XT_CONNMARK_H
+-#define _XT_CONNMARK_H
++#ifndef _XT_CONNMARK_H_target
++#define _XT_CONNMARK_H_target
+ 
+ #include <linux/types.h>
+ 
+@@ -12,9 +12,15 @@
+  * (at your option) any later version.
+  */
+ 
+-struct xt_connmark_mtinfo1 {
+-	__u32 mark, mask;
+-	__u8 invert;
++enum {
++	XT_CONNMARK_SET = 0,
++	XT_CONNMARK_SAVE,
++	XT_CONNMARK_RESTORE
+ };
+ 
+-#endif /*_XT_CONNMARK_H*/
++struct xt_connmark_tginfo1 {
++	__u32 ctmark, ctmask, nfmask;
++	__u8 mode;
++};
++
++#endif /*_XT_CONNMARK_H_target*/
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_CONNMARK.h kernel-2.6.33/include/linux/netfilter/xt_CONNMARK.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_CONNMARK.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_CONNMARK.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,26 +0,0 @@
+-#ifndef _XT_CONNMARK_H_target
+-#define _XT_CONNMARK_H_target
+-
+-#include <linux/types.h>
+-
+-/* Copyright (C) 2002,2004 MARA Systems AB <http://www.marasystems.com>
+- * by Henrik Nordstrom <hno@marasystems.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- */
+-
+-enum {
+-	XT_CONNMARK_SET = 0,
+-	XT_CONNMARK_SAVE,
+-	XT_CONNMARK_RESTORE
+-};
+-
+-struct xt_connmark_tginfo1 {
+-	__u32 ctmark, ctmask, nfmask;
+-	__u8 mode;
+-};
+-
+-#endif /*_XT_CONNMARK_H_target*/
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_dscp.h kernel-2.6.33/include/linux/netfilter/xt_dscp.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_dscp.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_dscp.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,31 +1,26 @@
+-/* x_tables module for matching the IPv4/IPv6 DSCP field
++/* x_tables module for setting the IPv4/IPv6 DSCP field
+  *
+  * (C) 2002 Harald Welte <laforge@gnumonks.org>
++ * based on ipt_FTOS.c (C) 2000 by Matthew G. Marsh <mgm@paktronix.com>
+  * This software is distributed under GNU GPL v2, 1991
+  *
+  * See RFC2474 for a description of the DSCP field within the IP Header.
+  *
+- * xt_dscp.h,v 1.3 2002/08/05 19:00:21 laforge Exp
++ * xt_DSCP.h,v 1.7 2002/03/14 12:03:13 laforge Exp
+ */
+-#ifndef _XT_DSCP_H
+-#define _XT_DSCP_H
+-
++#ifndef _XT_DSCP_TARGET_H
++#define _XT_DSCP_TARGET_H
++#include <linux/netfilter/xt_dscp.h>
+ #include <linux/types.h>
+ 
+-#define XT_DSCP_MASK	0xfc	/* 11111100 */
+-#define XT_DSCP_SHIFT	2
+-#define XT_DSCP_MAX	0x3f	/* 00111111 */
+-
+-/* match info */
+-struct xt_dscp_info {
++/* target info */
++struct xt_DSCP_info {
+ 	__u8 dscp;
+-	__u8 invert;
+ };
+ 
+-struct xt_tos_match_info {
+-	__u8 tos_mask;
++struct xt_tos_target_info {
+ 	__u8 tos_value;
+-	__u8 invert;
++	__u8 tos_mask;
+ };
+ 
+-#endif /* _XT_DSCP_H */
++#endif /* _XT_DSCP_TARGET_H */
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_DSCP.h kernel-2.6.33/include/linux/netfilter/xt_DSCP.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_DSCP.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_DSCP.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,26 +0,0 @@
+-/* x_tables module for setting the IPv4/IPv6 DSCP field
+- *
+- * (C) 2002 Harald Welte <laforge@gnumonks.org>
+- * based on ipt_FTOS.c (C) 2000 by Matthew G. Marsh <mgm@paktronix.com>
+- * This software is distributed under GNU GPL v2, 1991
+- *
+- * See RFC2474 for a description of the DSCP field within the IP Header.
+- *
+- * xt_DSCP.h,v 1.7 2002/03/14 12:03:13 laforge Exp
+-*/
+-#ifndef _XT_DSCP_TARGET_H
+-#define _XT_DSCP_TARGET_H
+-#include <linux/netfilter/xt_dscp.h>
+-#include <linux/types.h>
+-
+-/* target info */
+-struct xt_DSCP_info {
+-	__u8 dscp;
+-};
+-
+-struct xt_tos_target_info {
+-	__u8 tos_value;
+-	__u8 tos_mask;
+-};
+-
+-#endif /* _XT_DSCP_TARGET_H */
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_mark.h kernel-2.6.33/include/linux/netfilter/xt_mark.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_mark.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_mark.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,11 +0,0 @@
+-#ifndef _XT_MARK_H
+-#define _XT_MARK_H
+-
+-#include <linux/types.h>
+-
+-struct xt_mark_mtinfo1 {
+-	__u32 mark, mask;
+-	__u8 invert;
+-};
+-
+-#endif /*_XT_MARK_H*/
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_MARK.h kernel-2.6.33/include/linux/netfilter/xt_MARK.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_MARK.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_MARK.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,10 +1,11 @@
+-#ifndef _XT_MARK_H_target
+-#define _XT_MARK_H_target
++#ifndef _XT_MARK_H
++#define _XT_MARK_H
+ 
+ #include <linux/types.h>
+ 
+-struct xt_mark_tginfo2 {
++struct xt_mark_mtinfo1 {
+ 	__u32 mark, mask;
++	__u8 invert;
+ };
+ 
+-#endif /*_XT_MARK_H_target */
++#endif /*_XT_MARK_H*/
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_rateest.h kernel-2.6.33/include/linux/netfilter/xt_rateest.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_rateest.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_rateest.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,37 +1,15 @@
+-#ifndef _XT_RATEEST_MATCH_H
+-#define _XT_RATEEST_MATCH_H
++#ifndef _XT_RATEEST_TARGET_H
++#define _XT_RATEEST_TARGET_H
+ 
+ #include <linux/types.h>
+ 
+-enum xt_rateest_match_flags {
+-	XT_RATEEST_MATCH_INVERT	= 1<<0,
+-	XT_RATEEST_MATCH_ABS	= 1<<1,
+-	XT_RATEEST_MATCH_REL	= 1<<2,
+-	XT_RATEEST_MATCH_DELTA	= 1<<3,
+-	XT_RATEEST_MATCH_BPS	= 1<<4,
+-	XT_RATEEST_MATCH_PPS	= 1<<5,
+-};
+-
+-enum xt_rateest_match_mode {
+-	XT_RATEEST_MATCH_NONE,
+-	XT_RATEEST_MATCH_EQ,
+-	XT_RATEEST_MATCH_LT,
+-	XT_RATEEST_MATCH_GT,
+-};
+-
+-struct xt_rateest_match_info {
+-	char			name1[IFNAMSIZ];
+-	char			name2[IFNAMSIZ];
+-	__u16		flags;
+-	__u16		mode;
+-	__u32		bps1;
+-	__u32		pps1;
+-	__u32		bps2;
+-	__u32		pps2;
++struct xt_rateest_target_info {
++	char			name[IFNAMSIZ];
++	__s8			interval;
++	__u8		ewma_log;
+ 
+ 	/* Used internally by the kernel */
+-	struct xt_rateest	*est1 __attribute__((aligned(8)));
+-	struct xt_rateest	*est2 __attribute__((aligned(8)));
++	struct xt_rateest	*est __attribute__((aligned(8)));
+ };
+ 
+-#endif /* _XT_RATEEST_MATCH_H */
++#endif /* _XT_RATEEST_TARGET_H */
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_RATEEST.h kernel-2.6.33/include/linux/netfilter/xt_RATEEST.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_RATEEST.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_RATEEST.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,15 +0,0 @@
+-#ifndef _XT_RATEEST_TARGET_H
+-#define _XT_RATEEST_TARGET_H
+-
+-#include <linux/types.h>
+-
+-struct xt_rateest_target_info {
+-	char			name[IFNAMSIZ];
+-	__s8			interval;
+-	__u8		ewma_log;
+-
+-	/* Used internally by the kernel */
+-	struct xt_rateest	*est __attribute__((aligned(8)));
+-};
+-
+-#endif /* _XT_RATEEST_TARGET_H */
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_tcpmss.h kernel-2.6.33/include/linux/netfilter/xt_tcpmss.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_tcpmss.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_tcpmss.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,11 +0,0 @@
+-#ifndef _XT_TCPMSS_MATCH_H
+-#define _XT_TCPMSS_MATCH_H
+-
+-#include <linux/types.h>
+-
+-struct xt_tcpmss_match_info {
+-    __u16 mss_min, mss_max;
+-    __u8 invert;
+-};
+-
+-#endif /*_XT_TCPMSS_MATCH_H*/
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_TCPMSS.h kernel-2.6.33/include/linux/netfilter/xt_TCPMSS.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter/xt_TCPMSS.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter/xt_TCPMSS.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,12 +1,11 @@
+-#ifndef _XT_TCPMSS_H
+-#define _XT_TCPMSS_H
++#ifndef _XT_TCPMSS_MATCH_H
++#define _XT_TCPMSS_MATCH_H
+ 
+ #include <linux/types.h>
+ 
+-struct xt_tcpmss_info {
+-	__u16 mss;
++struct xt_tcpmss_match_info {
++    __u16 mss_min, mss_max;
++    __u8 invert;
+ };
+ 
+-#define XT_TCPMSS_CLAMP_PMTU 0xffff
+-
+-#endif /* _XT_TCPMSS_H */
++#endif /*_XT_TCPMSS_MATCH_H*/
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_ecn.h kernel-2.6.33/include/linux/netfilter_ipv4/ipt_ecn.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_ecn.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter_ipv4/ipt_ecn.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,33 +0,0 @@
+-/* iptables module for matching the ECN header in IPv4 and TCP header
+- *
+- * (C) 2002 Harald Welte <laforge@gnumonks.org>
+- *
+- * This software is distributed under GNU GPL v2, 1991
+- * 
+- * ipt_ecn.h,v 1.4 2002/08/05 19:39:00 laforge Exp
+-*/
+-#ifndef _IPT_ECN_H
+-#define _IPT_ECN_H
+-#include <linux/netfilter/xt_dscp.h>
+-
+-#define IPT_ECN_IP_MASK	(~XT_DSCP_MASK)
+-
+-#define IPT_ECN_OP_MATCH_IP	0x01
+-#define IPT_ECN_OP_MATCH_ECE	0x10
+-#define IPT_ECN_OP_MATCH_CWR	0x20
+-
+-#define IPT_ECN_OP_MATCH_MASK	0xce
+-
+-/* match info */
+-struct ipt_ecn_info {
+-	u_int8_t operation;
+-	u_int8_t invert;
+-	u_int8_t ip_ect;
+-	union {
+-		struct {
+-			u_int8_t ect;
+-		} tcp;
+-	} proto;
+-};
+-
+-#endif /* _IPT_ECN_H */
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_ECN.h kernel-2.6.33/include/linux/netfilter_ipv4/ipt_ECN.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_ECN.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter_ipv4/ipt_ECN.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,31 +1,33 @@
+-/* Header file for iptables ipt_ECN target
++/* iptables module for matching the ECN header in IPv4 and TCP header
+  *
+- * (C) 2002 by Harald Welte <laforge@gnumonks.org>
++ * (C) 2002 Harald Welte <laforge@gnumonks.org>
+  *
+  * This software is distributed under GNU GPL v2, 1991
+  * 
+- * ipt_ECN.h,v 1.3 2002/05/29 12:17:40 laforge Exp
++ * ipt_ecn.h,v 1.4 2002/08/05 19:39:00 laforge Exp
+ */
+-#ifndef _IPT_ECN_TARGET_H
+-#define _IPT_ECN_TARGET_H
+-#include <linux/netfilter/xt_DSCP.h>
++#ifndef _IPT_ECN_H
++#define _IPT_ECN_H
++#include <linux/netfilter/xt_dscp.h>
+ 
+ #define IPT_ECN_IP_MASK	(~XT_DSCP_MASK)
+ 
+-#define IPT_ECN_OP_SET_IP	0x01	/* set ECN bits of IPv4 header */
+-#define IPT_ECN_OP_SET_ECE	0x10	/* set ECE bit of TCP header */
+-#define IPT_ECN_OP_SET_CWR	0x20	/* set CWR bit of TCP header */
++#define IPT_ECN_OP_MATCH_IP	0x01
++#define IPT_ECN_OP_MATCH_ECE	0x10
++#define IPT_ECN_OP_MATCH_CWR	0x20
+ 
+-#define IPT_ECN_OP_MASK		0xce
++#define IPT_ECN_OP_MATCH_MASK	0xce
+ 
+-struct ipt_ECN_info {
+-	u_int8_t operation;	/* bitset of operations */
+-	u_int8_t ip_ect;	/* ECT codepoint of IPv4 header, pre-shifted */
++/* match info */
++struct ipt_ecn_info {
++	u_int8_t operation;
++	u_int8_t invert;
++	u_int8_t ip_ect;
+ 	union {
+ 		struct {
+-			u_int8_t ece:1, cwr:1; /* TCP ECT bits */
++			u_int8_t ect;
+ 		} tcp;
+ 	} proto;
+ };
+ 
+-#endif /* _IPT_ECN_TARGET_H */
++#endif /* _IPT_ECN_H */
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_ttl.h kernel-2.6.33/include/linux/netfilter_ipv4/ipt_ttl.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_ttl.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter_ipv4/ipt_ttl.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,18 +1,18 @@
+-/* IP tables module for matching the value of the TTL
+- * (C) 2000 by Harald Welte <laforge@gnumonks.org> */
++/* TTL modification module for IP tables
++ * (C) 2000 by Harald Welte <laforge@netfilter.org> */
+ 
+ #ifndef _IPT_TTL_H
+ #define _IPT_TTL_H
+ 
+ enum {
+-	IPT_TTL_EQ = 0,		/* equals */
+-	IPT_TTL_NE,		/* not equals */
+-	IPT_TTL_LT,		/* less than */
+-	IPT_TTL_GT,		/* greater than */
++	IPT_TTL_SET = 0,
++	IPT_TTL_INC,
++	IPT_TTL_DEC
+ };
+ 
++#define IPT_TTL_MAXMODE	IPT_TTL_DEC
+ 
+-struct ipt_ttl_info {
++struct ipt_TTL_info {
+ 	u_int8_t	mode;
+ 	u_int8_t	ttl;
+ };
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_TTL.h kernel-2.6.33/include/linux/netfilter_ipv4/ipt_TTL.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv4/ipt_TTL.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter_ipv4/ipt_TTL.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,21 +0,0 @@
+-/* TTL modification module for IP tables
+- * (C) 2000 by Harald Welte <laforge@netfilter.org> */
+-
+-#ifndef _IPT_TTL_H
+-#define _IPT_TTL_H
+-
+-enum {
+-	IPT_TTL_SET = 0,
+-	IPT_TTL_INC,
+-	IPT_TTL_DEC
+-};
+-
+-#define IPT_TTL_MAXMODE	IPT_TTL_DEC
+-
+-struct ipt_TTL_info {
+-	u_int8_t	mode;
+-	u_int8_t	ttl;
+-};
+-
+-
+-#endif
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv6/ip6t_hl.h kernel-2.6.33/include/linux/netfilter_ipv6/ip6t_hl.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv6/ip6t_hl.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter_ipv6/ip6t_hl.h	2011-05-11 17:36:32.000000000 +0300
+@@ -1,19 +1,19 @@
+-/* ip6tables module for matching the Hop Limit value
++/* Hop Limit modification module for ip6tables
+  * Maciej Soltysiak <solt@dns.toxicfilms.tv>
+- * Based on HW's ttl module */
++ * Based on HW's TTL module */
+ 
+ #ifndef _IP6T_HL_H
+ #define _IP6T_HL_H
+ 
+ enum {
+-	IP6T_HL_EQ = 0,		/* equals */
+-	IP6T_HL_NE,		/* not equals */
+-	IP6T_HL_LT,		/* less than */
+-	IP6T_HL_GT,		/* greater than */
++	IP6T_HL_SET = 0,
++	IP6T_HL_INC,
++	IP6T_HL_DEC
+ };
+ 
++#define IP6T_HL_MAXMODE	IP6T_HL_DEC
+ 
+-struct ip6t_hl_info {
++struct ip6t_HL_info {
+ 	u_int8_t	mode;
+ 	u_int8_t	hop_limit;
+ };
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv6/ip6t_HL.h kernel-2.6.33/include/linux/netfilter_ipv6/ip6t_HL.h
+--- linux-2.6.33.7.2-rt30/include/linux/netfilter_ipv6/ip6t_HL.h	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/include/linux/netfilter_ipv6/ip6t_HL.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,22 +0,0 @@
+-/* Hop Limit modification module for ip6tables
+- * Maciej Soltysiak <solt@dns.toxicfilms.tv>
+- * Based on HW's TTL module */
+-
+-#ifndef _IP6T_HL_H
+-#define _IP6T_HL_H
+-
+-enum {
+-	IP6T_HL_SET = 0,
+-	IP6T_HL_INC,
+-	IP6T_HL_DEC
+-};
+-
+-#define IP6T_HL_MAXMODE	IP6T_HL_DEC
+-
+-struct ip6t_HL_info {
+-	u_int8_t	mode;
+-	u_int8_t	hop_limit;
+-};
+-
+-
+-#endif
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/ipv4/netfilter/ipt_ecn.c kernel-2.6.33/net/ipv4/netfilter/ipt_ecn.c
+--- linux-2.6.33.7.2-rt30/net/ipv4/netfilter/ipt_ecn.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/ipv4/netfilter/ipt_ecn.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,129 +0,0 @@
+-/* IP tables module for matching the value of the IPv4 and TCP ECN bits
+- *
+- * (C) 2002 by Harald Welte <laforge@gnumonks.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
+-
+-#include <linux/in.h>
+-#include <linux/ip.h>
+-#include <net/ip.h>
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-#include <linux/tcp.h>
+-
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter_ipv4/ip_tables.h>
+-#include <linux/netfilter_ipv4/ipt_ecn.h>
+-
+-MODULE_AUTHOR("Harald Welte <laforge@netfilter.org>");
+-MODULE_DESCRIPTION("Xtables: Explicit Congestion Notification (ECN) flag match for IPv4");
+-MODULE_LICENSE("GPL");
+-
+-static inline bool match_ip(const struct sk_buff *skb,
+-			    const struct ipt_ecn_info *einfo)
+-{
+-	return (ip_hdr(skb)->tos & IPT_ECN_IP_MASK) == einfo->ip_ect;
+-}
+-
+-static inline bool match_tcp(const struct sk_buff *skb,
+-			     const struct ipt_ecn_info *einfo,
+-			     bool *hotdrop)
+-{
+-	struct tcphdr _tcph;
+-	const struct tcphdr *th;
+-
+-	/* In practice, TCP match does this, so can't fail.  But let's
+-	 * be good citizens.
+-	 */
+-	th = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(_tcph), &_tcph);
+-	if (th == NULL) {
+-		*hotdrop = false;
+-		return false;
+-	}
+-
+-	if (einfo->operation & IPT_ECN_OP_MATCH_ECE) {
+-		if (einfo->invert & IPT_ECN_OP_MATCH_ECE) {
+-			if (th->ece == 1)
+-				return false;
+-		} else {
+-			if (th->ece == 0)
+-				return false;
+-		}
+-	}
+-
+-	if (einfo->operation & IPT_ECN_OP_MATCH_CWR) {
+-		if (einfo->invert & IPT_ECN_OP_MATCH_CWR) {
+-			if (th->cwr == 1)
+-				return false;
+-		} else {
+-			if (th->cwr == 0)
+-				return false;
+-		}
+-	}
+-
+-	return true;
+-}
+-
+-static bool ecn_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct ipt_ecn_info *info = par->matchinfo;
+-
+-	if (info->operation & IPT_ECN_OP_MATCH_IP)
+-		if (!match_ip(skb, info))
+-			return false;
+-
+-	if (info->operation & (IPT_ECN_OP_MATCH_ECE|IPT_ECN_OP_MATCH_CWR)) {
+-		if (ip_hdr(skb)->protocol != IPPROTO_TCP)
+-			return false;
+-		if (!match_tcp(skb, info, par->hotdrop))
+-			return false;
+-	}
+-
+-	return true;
+-}
+-
+-static bool ecn_mt_check(const struct xt_mtchk_param *par)
+-{
+-	const struct ipt_ecn_info *info = par->matchinfo;
+-	const struct ipt_ip *ip = par->entryinfo;
+-
+-	if (info->operation & IPT_ECN_OP_MATCH_MASK)
+-		return false;
+-
+-	if (info->invert & IPT_ECN_OP_MATCH_MASK)
+-		return false;
+-
+-	if (info->operation & (IPT_ECN_OP_MATCH_ECE|IPT_ECN_OP_MATCH_CWR) &&
+-	    ip->proto != IPPROTO_TCP) {
+-		printk(KERN_WARNING "ipt_ecn: can't match TCP bits in rule for"
+-		       " non-tcp packets\n");
+-		return false;
+-	}
+-
+-	return true;
+-}
+-
+-static struct xt_match ecn_mt_reg __read_mostly = {
+-	.name		= "ecn",
+-	.family		= NFPROTO_IPV4,
+-	.match		= ecn_mt,
+-	.matchsize	= sizeof(struct ipt_ecn_info),
+-	.checkentry	= ecn_mt_check,
+-	.me		= THIS_MODULE,
+-};
+-
+-static int __init ecn_mt_init(void)
+-{
+-	return xt_register_match(&ecn_mt_reg);
+-}
+-
+-static void __exit ecn_mt_exit(void)
+-{
+-	xt_unregister_match(&ecn_mt_reg);
+-}
+-
+-module_init(ecn_mt_init);
+-module_exit(ecn_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/ipv4/netfilter/ipt_ECN.c kernel-2.6.33/net/ipv4/netfilter/ipt_ECN.c
+--- linux-2.6.33.7.2-rt30/net/ipv4/netfilter/ipt_ECN.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/ipv4/netfilter/ipt_ECN.c	2011-05-11 17:36:32.000000000 +0300
+@@ -1,141 +1,129 @@
+-/* iptables module for the IPv4 and TCP ECN bits, Version 1.5
++/* IP tables module for matching the value of the IPv4 and TCP ECN bits
+  *
+- * (C) 2002 by Harald Welte <laforge@netfilter.org>
++ * (C) 2002 by Harald Welte <laforge@gnumonks.org>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+-*/
++ */
+ 
+ #include <linux/in.h>
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+ #include <linux/ip.h>
+ #include <net/ip.h>
++#include <linux/module.h>
++#include <linux/skbuff.h>
+ #include <linux/tcp.h>
+-#include <net/checksum.h>
+ 
+ #include <linux/netfilter/x_tables.h>
+ #include <linux/netfilter_ipv4/ip_tables.h>
+-#include <linux/netfilter_ipv4/ipt_ECN.h>
++#include <linux/netfilter_ipv4/ipt_ecn.h>
+ 
+-MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Harald Welte <laforge@netfilter.org>");
+-MODULE_DESCRIPTION("Xtables: Explicit Congestion Notification (ECN) flag modification");
++MODULE_DESCRIPTION("Xtables: Explicit Congestion Notification (ECN) flag match for IPv4");
++MODULE_LICENSE("GPL");
+ 
+-/* set ECT codepoint from IP header.
+- * 	return false if there was an error. */
+-static inline bool
+-set_ect_ip(struct sk_buff *skb, const struct ipt_ECN_info *einfo)
+-{
+-	struct iphdr *iph = ip_hdr(skb);
+-
+-	if ((iph->tos & IPT_ECN_IP_MASK) != (einfo->ip_ect & IPT_ECN_IP_MASK)) {
+-		__u8 oldtos;
+-		if (!skb_make_writable(skb, sizeof(struct iphdr)))
+-			return false;
+-		iph = ip_hdr(skb);
+-		oldtos = iph->tos;
+-		iph->tos &= ~IPT_ECN_IP_MASK;
+-		iph->tos |= (einfo->ip_ect & IPT_ECN_IP_MASK);
+-		csum_replace2(&iph->check, htons(oldtos), htons(iph->tos));
+-	}
+-	return true;
++static inline bool match_ip(const struct sk_buff *skb,
++			    const struct ipt_ecn_info *einfo)
++{
++	return (ip_hdr(skb)->tos & IPT_ECN_IP_MASK) == einfo->ip_ect;
+ }
+ 
+-/* Return false if there was an error. */
+-static inline bool
+-set_ect_tcp(struct sk_buff *skb, const struct ipt_ECN_info *einfo)
+-{
+-	struct tcphdr _tcph, *tcph;
+-	__be16 oldval;
+-
+-	/* Not enough header? */
+-	tcph = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(_tcph), &_tcph);
+-	if (!tcph)
+-		return false;
+-
+-	if ((!(einfo->operation & IPT_ECN_OP_SET_ECE) ||
+-	     tcph->ece == einfo->proto.tcp.ece) &&
+-	    (!(einfo->operation & IPT_ECN_OP_SET_CWR) ||
+-	     tcph->cwr == einfo->proto.tcp.cwr))
+-		return true;
++static inline bool match_tcp(const struct sk_buff *skb,
++			     const struct ipt_ecn_info *einfo,
++			     bool *hotdrop)
++{
++	struct tcphdr _tcph;
++	const struct tcphdr *th;
+ 
+-	if (!skb_make_writable(skb, ip_hdrlen(skb) + sizeof(*tcph)))
++	/* In practice, TCP match does this, so can't fail.  But let's
++	 * be good citizens.
++	 */
++	th = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(_tcph), &_tcph);
++	if (th == NULL) {
++		*hotdrop = false;
+ 		return false;
+-	tcph = (void *)ip_hdr(skb) + ip_hdrlen(skb);
++	}
+ 
+-	oldval = ((__be16 *)tcph)[6];
+-	if (einfo->operation & IPT_ECN_OP_SET_ECE)
+-		tcph->ece = einfo->proto.tcp.ece;
+-	if (einfo->operation & IPT_ECN_OP_SET_CWR)
+-		tcph->cwr = einfo->proto.tcp.cwr;
++	if (einfo->operation & IPT_ECN_OP_MATCH_ECE) {
++		if (einfo->invert & IPT_ECN_OP_MATCH_ECE) {
++			if (th->ece == 1)
++				return false;
++		} else {
++			if (th->ece == 0)
++				return false;
++		}
++	}
++
++	if (einfo->operation & IPT_ECN_OP_MATCH_CWR) {
++		if (einfo->invert & IPT_ECN_OP_MATCH_CWR) {
++			if (th->cwr == 1)
++				return false;
++		} else {
++			if (th->cwr == 0)
++				return false;
++		}
++	}
+ 
+-	inet_proto_csum_replace2(&tcph->check, skb,
+-				 oldval, ((__be16 *)tcph)[6], 0);
+ 	return true;
+ }
+ 
+-static unsigned int
+-ecn_tg(struct sk_buff *skb, const struct xt_target_param *par)
++static bool ecn_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	const struct ipt_ECN_info *einfo = par->targinfo;
++	const struct ipt_ecn_info *info = par->matchinfo;
+ 
+-	if (einfo->operation & IPT_ECN_OP_SET_IP)
+-		if (!set_ect_ip(skb, einfo))
+-			return NF_DROP;
++	if (info->operation & IPT_ECN_OP_MATCH_IP)
++		if (!match_ip(skb, info))
++			return false;
+ 
+-	if (einfo->operation & (IPT_ECN_OP_SET_ECE | IPT_ECN_OP_SET_CWR) &&
+-	    ip_hdr(skb)->protocol == IPPROTO_TCP)
+-		if (!set_ect_tcp(skb, einfo))
+-			return NF_DROP;
++	if (info->operation & (IPT_ECN_OP_MATCH_ECE|IPT_ECN_OP_MATCH_CWR)) {
++		if (ip_hdr(skb)->protocol != IPPROTO_TCP)
++			return false;
++		if (!match_tcp(skb, info, par->hotdrop))
++			return false;
++	}
+ 
+-	return XT_CONTINUE;
++	return true;
+ }
+ 
+-static bool ecn_tg_check(const struct xt_tgchk_param *par)
++static bool ecn_mt_check(const struct xt_mtchk_param *par)
+ {
+-	const struct ipt_ECN_info *einfo = par->targinfo;
+-	const struct ipt_entry *e = par->entryinfo;
++	const struct ipt_ecn_info *info = par->matchinfo;
++	const struct ipt_ip *ip = par->entryinfo;
+ 
+-	if (einfo->operation & IPT_ECN_OP_MASK) {
+-		printk(KERN_WARNING "ECN: unsupported ECN operation %x\n",
+-			einfo->operation);
++	if (info->operation & IPT_ECN_OP_MATCH_MASK)
+ 		return false;
+-	}
+-	if (einfo->ip_ect & ~IPT_ECN_IP_MASK) {
+-		printk(KERN_WARNING "ECN: new ECT codepoint %x out of mask\n",
+-			einfo->ip_ect);
++
++	if (info->invert & IPT_ECN_OP_MATCH_MASK)
+ 		return false;
+-	}
+-	if ((einfo->operation & (IPT_ECN_OP_SET_ECE|IPT_ECN_OP_SET_CWR)) &&
+-	    (e->ip.proto != IPPROTO_TCP || (e->ip.invflags & XT_INV_PROTO))) {
+-		printk(KERN_WARNING "ECN: cannot use TCP operations on a "
+-		       "non-tcp rule\n");
++
++	if (info->operation & (IPT_ECN_OP_MATCH_ECE|IPT_ECN_OP_MATCH_CWR) &&
++	    ip->proto != IPPROTO_TCP) {
++		printk(KERN_WARNING "ipt_ecn: can't match TCP bits in rule for"
++		       " non-tcp packets\n");
+ 		return false;
+ 	}
++
+ 	return true;
+ }
+ 
+-static struct xt_target ecn_tg_reg __read_mostly = {
+-	.name		= "ECN",
++static struct xt_match ecn_mt_reg __read_mostly = {
++	.name		= "ecn",
+ 	.family		= NFPROTO_IPV4,
+-	.target		= ecn_tg,
+-	.targetsize	= sizeof(struct ipt_ECN_info),
+-	.table		= "mangle",
+-	.checkentry	= ecn_tg_check,
++	.match		= ecn_mt,
++	.matchsize	= sizeof(struct ipt_ecn_info),
++	.checkentry	= ecn_mt_check,
+ 	.me		= THIS_MODULE,
+ };
+ 
+-static int __init ecn_tg_init(void)
++static int __init ecn_mt_init(void)
+ {
+-	return xt_register_target(&ecn_tg_reg);
++	return xt_register_match(&ecn_mt_reg);
+ }
+ 
+-static void __exit ecn_tg_exit(void)
++static void __exit ecn_mt_exit(void)
+ {
+-	xt_unregister_target(&ecn_tg_reg);
++	xt_unregister_match(&ecn_mt_reg);
+ }
+ 
+-module_init(ecn_tg_init);
+-module_exit(ecn_tg_exit);
++module_init(ecn_mt_init);
++module_exit(ecn_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_connmark.c kernel-2.6.33/net/netfilter/xt_connmark.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_connmark.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_connmark.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,87 +0,0 @@
+-/*
+- *	xt_connmark - Netfilter module to match connection mark values
+- *
+- *	Copyright (C) 2002,2004 MARA Systems AB <http://www.marasystems.com>
+- *	by Henrik Nordstrom <hno@marasystems.com>
+- *	Copyright © CC Computer Consultants GmbH, 2007 - 2008
+- *	Jan Engelhardt <jengelh@computergmbh.de>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- */
+-
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-#include <net/netfilter/nf_conntrack.h>
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_connmark.h>
+-
+-MODULE_AUTHOR("Henrik Nordstrom <hno@marasystems.com>");
+-MODULE_DESCRIPTION("Xtables: connection mark match");
+-MODULE_LICENSE("GPL");
+-MODULE_ALIAS("ipt_connmark");
+-MODULE_ALIAS("ip6t_connmark");
+-
+-static bool
+-connmark_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_connmark_mtinfo1 *info = par->matchinfo;
+-	enum ip_conntrack_info ctinfo;
+-	const struct nf_conn *ct;
+-
+-	ct = nf_ct_get(skb, &ctinfo);
+-	if (ct == NULL)
+-		return false;
+-
+-	return ((ct->mark & info->mask) == info->mark) ^ info->invert;
+-}
+-
+-static bool connmark_mt_check(const struct xt_mtchk_param *par)
+-{
+-	if (nf_ct_l3proto_try_module_get(par->family) < 0) {
+-		printk(KERN_WARNING "cannot load conntrack support for "
+-		       "proto=%u\n", par->family);
+-		return false;
+-	}
+-	return true;
+-}
+-
+-static void connmark_mt_destroy(const struct xt_mtdtor_param *par)
+-{
+-	nf_ct_l3proto_module_put(par->family);
+-}
+-
+-static struct xt_match connmark_mt_reg __read_mostly = {
+-	.name           = "connmark",
+-	.revision       = 1,
+-	.family         = NFPROTO_UNSPEC,
+-	.checkentry     = connmark_mt_check,
+-	.match          = connmark_mt,
+-	.matchsize      = sizeof(struct xt_connmark_mtinfo1),
+-	.destroy        = connmark_mt_destroy,
+-	.me             = THIS_MODULE,
+-};
+-
+-static int __init connmark_mt_init(void)
+-{
+-	return xt_register_match(&connmark_mt_reg);
+-}
+-
+-static void __exit connmark_mt_exit(void)
+-{
+-	xt_unregister_match(&connmark_mt_reg);
+-}
+-
+-module_init(connmark_mt_init);
+-module_exit(connmark_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_CONNMARK.c kernel-2.6.33/net/netfilter/xt_CONNMARK.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_CONNMARK.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_CONNMARK.c	2011-05-11 17:36:32.000000000 +0300
+@@ -1,5 +1,5 @@
+ /*
+- *	xt_CONNMARK - Netfilter module to modify the connection mark values
++ *	xt_connmark - Netfilter module to match connection mark values
+  *
+  *	Copyright (C) 2002,2004 MARA Systems AB <http://www.marasystems.com>
+  *	by Henrik Nordstrom <hno@marasystems.com>
+@@ -20,60 +20,34 @@
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
++
+ #include <linux/module.h>
+ #include <linux/skbuff.h>
+-#include <linux/ip.h>
+-#include <net/checksum.h>
++#include <net/netfilter/nf_conntrack.h>
++#include <linux/netfilter/x_tables.h>
++#include <linux/netfilter/xt_connmark.h>
+ 
+ MODULE_AUTHOR("Henrik Nordstrom <hno@marasystems.com>");
+-MODULE_DESCRIPTION("Xtables: connection mark modification");
++MODULE_DESCRIPTION("Xtables: connection mark match");
+ MODULE_LICENSE("GPL");
+-MODULE_ALIAS("ipt_CONNMARK");
+-MODULE_ALIAS("ip6t_CONNMARK");
+-
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_CONNMARK.h>
+-#include <net/netfilter/nf_conntrack_ecache.h>
++MODULE_ALIAS("ipt_connmark");
++MODULE_ALIAS("ip6t_connmark");
+ 
+-static unsigned int
+-connmark_tg(struct sk_buff *skb, const struct xt_target_param *par)
++static bool
++connmark_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	const struct xt_connmark_tginfo1 *info = par->targinfo;
++	const struct xt_connmark_mtinfo1 *info = par->matchinfo;
+ 	enum ip_conntrack_info ctinfo;
+-	struct nf_conn *ct;
+-	u_int32_t newmark;
++	const struct nf_conn *ct;
+ 
+ 	ct = nf_ct_get(skb, &ctinfo);
+ 	if (ct == NULL)
+-		return XT_CONTINUE;
+-
+-	switch (info->mode) {
+-	case XT_CONNMARK_SET:
+-		newmark = (ct->mark & ~info->ctmask) ^ info->ctmark;
+-		if (ct->mark != newmark) {
+-			ct->mark = newmark;
+-			nf_conntrack_event_cache(IPCT_MARK, ct);
+-		}
+-		break;
+-	case XT_CONNMARK_SAVE:
+-		newmark = (ct->mark & ~info->ctmask) ^
+-		          (skb->mark & info->nfmask);
+-		if (ct->mark != newmark) {
+-			ct->mark = newmark;
+-			nf_conntrack_event_cache(IPCT_MARK, ct);
+-		}
+-		break;
+-	case XT_CONNMARK_RESTORE:
+-		newmark = (skb->mark & ~info->nfmask) ^
+-		          (ct->mark & info->ctmask);
+-		skb->mark = newmark;
+-		break;
+-	}
++		return false;
+ 
+-	return XT_CONTINUE;
++	return ((ct->mark & info->mask) == info->mark) ^ info->invert;
+ }
+ 
+-static bool connmark_tg_check(const struct xt_tgchk_param *par)
++static bool connmark_mt_check(const struct xt_mtchk_param *par)
+ {
+ 	if (nf_ct_l3proto_try_module_get(par->family) < 0) {
+ 		printk(KERN_WARNING "cannot load conntrack support for "
+@@ -83,31 +57,31 @@
+ 	return true;
+ }
+ 
+-static void connmark_tg_destroy(const struct xt_tgdtor_param *par)
++static void connmark_mt_destroy(const struct xt_mtdtor_param *par)
+ {
+ 	nf_ct_l3proto_module_put(par->family);
+ }
+ 
+-static struct xt_target connmark_tg_reg __read_mostly = {
+-	.name           = "CONNMARK",
++static struct xt_match connmark_mt_reg __read_mostly = {
++	.name           = "connmark",
+ 	.revision       = 1,
+ 	.family         = NFPROTO_UNSPEC,
+-	.checkentry     = connmark_tg_check,
+-	.target         = connmark_tg,
+-	.targetsize     = sizeof(struct xt_connmark_tginfo1),
+-	.destroy        = connmark_tg_destroy,
++	.checkentry     = connmark_mt_check,
++	.match          = connmark_mt,
++	.matchsize      = sizeof(struct xt_connmark_mtinfo1),
++	.destroy        = connmark_mt_destroy,
+ 	.me             = THIS_MODULE,
+ };
+ 
+-static int __init connmark_tg_init(void)
++static int __init connmark_mt_init(void)
+ {
+-	return xt_register_target(&connmark_tg_reg);
++	return xt_register_match(&connmark_mt_reg);
+ }
+ 
+-static void __exit connmark_tg_exit(void)
++static void __exit connmark_mt_exit(void)
+ {
+-	xt_unregister_target(&connmark_tg_reg);
++	xt_unregister_match(&connmark_mt_reg);
+ }
+ 
+-module_init(connmark_tg_init);
+-module_exit(connmark_tg_exit);
++module_init(connmark_mt_init);
++module_exit(connmark_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_dscp.c kernel-2.6.33/net/netfilter/xt_dscp.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_dscp.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_dscp.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,115 +0,0 @@
+-/* IP tables module for matching the value of the IPv4/IPv6 DSCP field
+- *
+- * (C) 2002 by Harald Welte <laforge@netfilter.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
+-
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-#include <linux/ip.h>
+-#include <linux/ipv6.h>
+-#include <net/dsfield.h>
+-
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_dscp.h>
+-
+-MODULE_AUTHOR("Harald Welte <laforge@netfilter.org>");
+-MODULE_DESCRIPTION("Xtables: DSCP/TOS field match");
+-MODULE_LICENSE("GPL");
+-MODULE_ALIAS("ipt_dscp");
+-MODULE_ALIAS("ip6t_dscp");
+-MODULE_ALIAS("ipt_tos");
+-MODULE_ALIAS("ip6t_tos");
+-
+-static bool
+-dscp_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_dscp_info *info = par->matchinfo;
+-	u_int8_t dscp = ipv4_get_dsfield(ip_hdr(skb)) >> XT_DSCP_SHIFT;
+-
+-	return (dscp == info->dscp) ^ !!info->invert;
+-}
+-
+-static bool
+-dscp_mt6(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_dscp_info *info = par->matchinfo;
+-	u_int8_t dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> XT_DSCP_SHIFT;
+-
+-	return (dscp == info->dscp) ^ !!info->invert;
+-}
+-
+-static bool dscp_mt_check(const struct xt_mtchk_param *par)
+-{
+-	const struct xt_dscp_info *info = par->matchinfo;
+-
+-	if (info->dscp > XT_DSCP_MAX) {
+-		printk(KERN_ERR "xt_dscp: dscp %x out of range\n", info->dscp);
+-		return false;
+-	}
+-
+-	return true;
+-}
+-
+-static bool tos_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_tos_match_info *info = par->matchinfo;
+-
+-	if (par->match->family == NFPROTO_IPV4)
+-		return ((ip_hdr(skb)->tos & info->tos_mask) ==
+-		       info->tos_value) ^ !!info->invert;
+-	else
+-		return ((ipv6_get_dsfield(ipv6_hdr(skb)) & info->tos_mask) ==
+-		       info->tos_value) ^ !!info->invert;
+-}
+-
+-static struct xt_match dscp_mt_reg[] __read_mostly = {
+-	{
+-		.name		= "dscp",
+-		.family		= NFPROTO_IPV4,
+-		.checkentry	= dscp_mt_check,
+-		.match		= dscp_mt,
+-		.matchsize	= sizeof(struct xt_dscp_info),
+-		.me		= THIS_MODULE,
+-	},
+-	{
+-		.name		= "dscp",
+-		.family		= NFPROTO_IPV6,
+-		.checkentry	= dscp_mt_check,
+-		.match		= dscp_mt6,
+-		.matchsize	= sizeof(struct xt_dscp_info),
+-		.me		= THIS_MODULE,
+-	},
+-	{
+-		.name		= "tos",
+-		.revision	= 1,
+-		.family		= NFPROTO_IPV4,
+-		.match		= tos_mt,
+-		.matchsize	= sizeof(struct xt_tos_match_info),
+-		.me		= THIS_MODULE,
+-	},
+-	{
+-		.name		= "tos",
+-		.revision	= 1,
+-		.family		= NFPROTO_IPV6,
+-		.match		= tos_mt,
+-		.matchsize	= sizeof(struct xt_tos_match_info),
+-		.me		= THIS_MODULE,
+-	},
+-};
+-
+-static int __init dscp_mt_init(void)
+-{
+-	return xt_register_matches(dscp_mt_reg, ARRAY_SIZE(dscp_mt_reg));
+-}
+-
+-static void __exit dscp_mt_exit(void)
+-{
+-	xt_unregister_matches(dscp_mt_reg, ARRAY_SIZE(dscp_mt_reg));
+-}
+-
+-module_init(dscp_mt_init);
+-module_exit(dscp_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_DSCP.c kernel-2.6.33/net/netfilter/xt_DSCP.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_DSCP.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_DSCP.c	2011-05-11 17:36:32.000000000 +0300
+@@ -1,14 +1,11 @@
+-/* x_tables module for setting the IPv4/IPv6 DSCP field, Version 1.8
++/* IP tables module for matching the value of the IPv4/IPv6 DSCP field
+  *
+  * (C) 2002 by Harald Welte <laforge@netfilter.org>
+- * based on ipt_FTOS.c (C) 2000 by Matthew G. Marsh <mgm@paktronix.com>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+- *
+- * See RFC2474 for a description of the DSCP field within the IP Header.
+-*/
++ */
+ 
+ #include <linux/module.h>
+ #include <linux/skbuff.h>
+@@ -17,148 +14,102 @@
+ #include <net/dsfield.h>
+ 
+ #include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_DSCP.h>
++#include <linux/netfilter/xt_dscp.h>
+ 
+ MODULE_AUTHOR("Harald Welte <laforge@netfilter.org>");
+-MODULE_DESCRIPTION("Xtables: DSCP/TOS field modification");
++MODULE_DESCRIPTION("Xtables: DSCP/TOS field match");
+ MODULE_LICENSE("GPL");
+-MODULE_ALIAS("ipt_DSCP");
+-MODULE_ALIAS("ip6t_DSCP");
+-MODULE_ALIAS("ipt_TOS");
+-MODULE_ALIAS("ip6t_TOS");
++MODULE_ALIAS("ipt_dscp");
++MODULE_ALIAS("ip6t_dscp");
++MODULE_ALIAS("ipt_tos");
++MODULE_ALIAS("ip6t_tos");
+ 
+-static unsigned int
+-dscp_tg(struct sk_buff *skb, const struct xt_target_param *par)
++static bool
++dscp_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	const struct xt_DSCP_info *dinfo = par->targinfo;
++	const struct xt_dscp_info *info = par->matchinfo;
+ 	u_int8_t dscp = ipv4_get_dsfield(ip_hdr(skb)) >> XT_DSCP_SHIFT;
+ 
+-	if (dscp != dinfo->dscp) {
+-		if (!skb_make_writable(skb, sizeof(struct iphdr)))
+-			return NF_DROP;
+-
+-		ipv4_change_dsfield(ip_hdr(skb), (__u8)(~XT_DSCP_MASK),
+-				    dinfo->dscp << XT_DSCP_SHIFT);
+-
+-	}
+-	return XT_CONTINUE;
++	return (dscp == info->dscp) ^ !!info->invert;
+ }
+ 
+-static unsigned int
+-dscp_tg6(struct sk_buff *skb, const struct xt_target_param *par)
++static bool
++dscp_mt6(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	const struct xt_DSCP_info *dinfo = par->targinfo;
++	const struct xt_dscp_info *info = par->matchinfo;
+ 	u_int8_t dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> XT_DSCP_SHIFT;
+ 
+-	if (dscp != dinfo->dscp) {
+-		if (!skb_make_writable(skb, sizeof(struct ipv6hdr)))
+-			return NF_DROP;
+-
+-		ipv6_change_dsfield(ipv6_hdr(skb), (__u8)(~XT_DSCP_MASK),
+-				    dinfo->dscp << XT_DSCP_SHIFT);
+-	}
+-	return XT_CONTINUE;
++	return (dscp == info->dscp) ^ !!info->invert;
+ }
+ 
+-static bool dscp_tg_check(const struct xt_tgchk_param *par)
++static bool dscp_mt_check(const struct xt_mtchk_param *par)
+ {
+-	const struct xt_DSCP_info *info = par->targinfo;
++	const struct xt_dscp_info *info = par->matchinfo;
+ 
+ 	if (info->dscp > XT_DSCP_MAX) {
+-		printk(KERN_WARNING "DSCP: dscp %x out of range\n", info->dscp);
++		printk(KERN_ERR "xt_dscp: dscp %x out of range\n", info->dscp);
+ 		return false;
+ 	}
+-	return true;
+-}
+ 
+-static unsigned int
+-tos_tg(struct sk_buff *skb, const struct xt_target_param *par)
+-{
+-	const struct xt_tos_target_info *info = par->targinfo;
+-	struct iphdr *iph = ip_hdr(skb);
+-	u_int8_t orig, nv;
+-
+-	orig = ipv4_get_dsfield(iph);
+-	nv   = (orig & ~info->tos_mask) ^ info->tos_value;
+-
+-	if (orig != nv) {
+-		if (!skb_make_writable(skb, sizeof(struct iphdr)))
+-			return NF_DROP;
+-		iph = ip_hdr(skb);
+-		ipv4_change_dsfield(iph, 0, nv);
+-	}
+-
+-	return XT_CONTINUE;
++	return true;
+ }
+ 
+-static unsigned int
+-tos_tg6(struct sk_buff *skb, const struct xt_target_param *par)
++static bool tos_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	const struct xt_tos_target_info *info = par->targinfo;
+-	struct ipv6hdr *iph = ipv6_hdr(skb);
+-	u_int8_t orig, nv;
+-
+-	orig = ipv6_get_dsfield(iph);
+-	nv   = (orig & info->tos_mask) ^ info->tos_value;
+-
+-	if (orig != nv) {
+-		if (!skb_make_writable(skb, sizeof(struct iphdr)))
+-			return NF_DROP;
+-		iph = ipv6_hdr(skb);
+-		ipv6_change_dsfield(iph, 0, nv);
+-	}
++	const struct xt_tos_match_info *info = par->matchinfo;
+ 
+-	return XT_CONTINUE;
++	if (par->match->family == NFPROTO_IPV4)
++		return ((ip_hdr(skb)->tos & info->tos_mask) ==
++		       info->tos_value) ^ !!info->invert;
++	else
++		return ((ipv6_get_dsfield(ipv6_hdr(skb)) & info->tos_mask) ==
++		       info->tos_value) ^ !!info->invert;
+ }
+ 
+-static struct xt_target dscp_tg_reg[] __read_mostly = {
++static struct xt_match dscp_mt_reg[] __read_mostly = {
+ 	{
+-		.name		= "DSCP",
++		.name		= "dscp",
+ 		.family		= NFPROTO_IPV4,
+-		.checkentry	= dscp_tg_check,
+-		.target		= dscp_tg,
+-		.targetsize	= sizeof(struct xt_DSCP_info),
+-		.table		= "mangle",
++		.checkentry	= dscp_mt_check,
++		.match		= dscp_mt,
++		.matchsize	= sizeof(struct xt_dscp_info),
+ 		.me		= THIS_MODULE,
+ 	},
+ 	{
+-		.name		= "DSCP",
++		.name		= "dscp",
+ 		.family		= NFPROTO_IPV6,
+-		.checkentry	= dscp_tg_check,
+-		.target		= dscp_tg6,
+-		.targetsize	= sizeof(struct xt_DSCP_info),
+-		.table		= "mangle",
++		.checkentry	= dscp_mt_check,
++		.match		= dscp_mt6,
++		.matchsize	= sizeof(struct xt_dscp_info),
+ 		.me		= THIS_MODULE,
+ 	},
+ 	{
+-		.name		= "TOS",
++		.name		= "tos",
+ 		.revision	= 1,
+ 		.family		= NFPROTO_IPV4,
+-		.table		= "mangle",
+-		.target		= tos_tg,
+-		.targetsize	= sizeof(struct xt_tos_target_info),
++		.match		= tos_mt,
++		.matchsize	= sizeof(struct xt_tos_match_info),
+ 		.me		= THIS_MODULE,
+ 	},
+ 	{
+-		.name		= "TOS",
++		.name		= "tos",
+ 		.revision	= 1,
+ 		.family		= NFPROTO_IPV6,
+-		.table		= "mangle",
+-		.target		= tos_tg6,
+-		.targetsize	= sizeof(struct xt_tos_target_info),
++		.match		= tos_mt,
++		.matchsize	= sizeof(struct xt_tos_match_info),
+ 		.me		= THIS_MODULE,
+ 	},
+ };
+ 
+-static int __init dscp_tg_init(void)
++static int __init dscp_mt_init(void)
+ {
+-	return xt_register_targets(dscp_tg_reg, ARRAY_SIZE(dscp_tg_reg));
++	return xt_register_matches(dscp_mt_reg, ARRAY_SIZE(dscp_mt_reg));
+ }
+ 
+-static void __exit dscp_tg_exit(void)
++static void __exit dscp_mt_exit(void)
+ {
+-	xt_unregister_targets(dscp_tg_reg, ARRAY_SIZE(dscp_tg_reg));
++	xt_unregister_matches(dscp_mt_reg, ARRAY_SIZE(dscp_mt_reg));
+ }
+ 
+-module_init(dscp_tg_init);
+-module_exit(dscp_tg_exit);
++module_init(dscp_mt_init);
++module_exit(dscp_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_hl.c kernel-2.6.33/net/netfilter/xt_hl.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_hl.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_hl.c	2011-05-11 17:36:32.000000000 +0300
+@@ -1,108 +1,171 @@
+ /*
+- * IP tables module for matching the value of the TTL
+- * (C) 2000,2001 by Harald Welte <laforge@netfilter.org>
++ * TTL modification target for IP tables
++ * (C) 2000,2005 by Harald Welte <laforge@netfilter.org>
+  *
+- * Hop Limit matching module
+- * (C) 2001-2002 Maciej Soltysiak <solt@dns.toxicfilms.tv>
++ * Hop Limit modification target for ip6tables
++ * Maciej Soltysiak <solt@dns.toxicfilms.tv>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
+ 
+-#include <linux/ip.h>
+-#include <linux/ipv6.h>
+ #include <linux/module.h>
+ #include <linux/skbuff.h>
++#include <linux/ip.h>
++#include <linux/ipv6.h>
++#include <net/checksum.h>
+ 
+ #include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter_ipv4/ipt_ttl.h>
+-#include <linux/netfilter_ipv6/ip6t_hl.h>
++#include <linux/netfilter_ipv4/ipt_TTL.h>
++#include <linux/netfilter_ipv6/ip6t_HL.h>
+ 
++MODULE_AUTHOR("Harald Welte <laforge@netfilter.org>");
+ MODULE_AUTHOR("Maciej Soltysiak <solt@dns.toxicfilms.tv>");
+-MODULE_DESCRIPTION("Xtables: Hoplimit/TTL field match");
++MODULE_DESCRIPTION("Xtables: Hoplimit/TTL Limit field modification target");
+ MODULE_LICENSE("GPL");
+-MODULE_ALIAS("ipt_ttl");
+-MODULE_ALIAS("ip6t_hl");
+ 
+-static bool ttl_mt(const struct sk_buff *skb, const struct xt_match_param *par)
++static unsigned int
++ttl_tg(struct sk_buff *skb, const struct xt_target_param *par)
+ {
+-	const struct ipt_ttl_info *info = par->matchinfo;
+-	const u8 ttl = ip_hdr(skb)->ttl;
++	struct iphdr *iph;
++	const struct ipt_TTL_info *info = par->targinfo;
++	int new_ttl;
++
++	if (!skb_make_writable(skb, skb->len))
++		return NF_DROP;
++
++	iph = ip_hdr(skb);
+ 
+ 	switch (info->mode) {
+-		case IPT_TTL_EQ:
+-			return ttl == info->ttl;
+-		case IPT_TTL_NE:
+-			return ttl != info->ttl;
+-		case IPT_TTL_LT:
+-			return ttl < info->ttl;
+-		case IPT_TTL_GT:
+-			return ttl > info->ttl;
++		case IPT_TTL_SET:
++			new_ttl = info->ttl;
++			break;
++		case IPT_TTL_INC:
++			new_ttl = iph->ttl + info->ttl;
++			if (new_ttl > 255)
++				new_ttl = 255;
++			break;
++		case IPT_TTL_DEC:
++			new_ttl = iph->ttl - info->ttl;
++			if (new_ttl < 0)
++				new_ttl = 0;
++			break;
+ 		default:
+-			printk(KERN_WARNING "ipt_ttl: unknown mode %d\n",
+-				info->mode);
+-			return false;
++			new_ttl = iph->ttl;
++			break;
+ 	}
+ 
+-	return false;
++	if (new_ttl != iph->ttl) {
++		csum_replace2(&iph->check, htons(iph->ttl << 8),
++					   htons(new_ttl << 8));
++		iph->ttl = new_ttl;
++	}
++
++	return XT_CONTINUE;
+ }
+ 
+-static bool hl_mt6(const struct sk_buff *skb, const struct xt_match_param *par)
++static unsigned int
++hl_tg6(struct sk_buff *skb, const struct xt_target_param *par)
+ {
+-	const struct ip6t_hl_info *info = par->matchinfo;
+-	const struct ipv6hdr *ip6h = ipv6_hdr(skb);
++	struct ipv6hdr *ip6h;
++	const struct ip6t_HL_info *info = par->targinfo;
++	int new_hl;
++
++	if (!skb_make_writable(skb, skb->len))
++		return NF_DROP;
++
++	ip6h = ipv6_hdr(skb);
+ 
+ 	switch (info->mode) {
+-		case IP6T_HL_EQ:
+-			return ip6h->hop_limit == info->hop_limit;
++		case IP6T_HL_SET:
++			new_hl = info->hop_limit;
+ 			break;
+-		case IP6T_HL_NE:
+-			return ip6h->hop_limit != info->hop_limit;
++		case IP6T_HL_INC:
++			new_hl = ip6h->hop_limit + info->hop_limit;
++			if (new_hl > 255)
++				new_hl = 255;
+ 			break;
+-		case IP6T_HL_LT:
+-			return ip6h->hop_limit < info->hop_limit;
+-			break;
+-		case IP6T_HL_GT:
+-			return ip6h->hop_limit > info->hop_limit;
++		case IP6T_HL_DEC:
++			new_hl = ip6h->hop_limit - info->hop_limit;
++			if (new_hl < 0)
++				new_hl = 0;
+ 			break;
+ 		default:
+-			printk(KERN_WARNING "ip6t_hl: unknown mode %d\n",
+-				info->mode);
+-			return false;
++			new_hl = ip6h->hop_limit;
++			break;
++	}
++
++	ip6h->hop_limit = new_hl;
++
++	return XT_CONTINUE;
++}
++
++static bool ttl_tg_check(const struct xt_tgchk_param *par)
++{
++	const struct ipt_TTL_info *info = par->targinfo;
++
++	if (info->mode > IPT_TTL_MAXMODE) {
++		printk(KERN_WARNING "ipt_TTL: invalid or unknown Mode %u\n",
++			info->mode);
++		return false;
+ 	}
++	if (info->mode != IPT_TTL_SET && info->ttl == 0)
++		return false;
++	return true;
++}
+ 
+-	return false;
++static bool hl_tg6_check(const struct xt_tgchk_param *par)
++{
++	const struct ip6t_HL_info *info = par->targinfo;
++
++	if (info->mode > IP6T_HL_MAXMODE) {
++		printk(KERN_WARNING "ip6t_HL: invalid or unknown Mode %u\n",
++			info->mode);
++		return false;
++	}
++	if (info->mode != IP6T_HL_SET && info->hop_limit == 0) {
++		printk(KERN_WARNING "ip6t_HL: increment/decrement doesn't "
++			"make sense with value 0\n");
++		return false;
++	}
++	return true;
+ }
+ 
+-static struct xt_match hl_mt_reg[] __read_mostly = {
++static struct xt_target hl_tg_reg[] __read_mostly = {
+ 	{
+-		.name       = "ttl",
++		.name       = "TTL",
+ 		.revision   = 0,
+ 		.family     = NFPROTO_IPV4,
+-		.match      = ttl_mt,
+-		.matchsize  = sizeof(struct ipt_ttl_info),
++		.target     = ttl_tg,
++		.targetsize = sizeof(struct ipt_TTL_info),
++		.table      = "mangle",
++		.checkentry = ttl_tg_check,
+ 		.me         = THIS_MODULE,
+ 	},
+ 	{
+-		.name       = "hl",
++		.name       = "HL",
+ 		.revision   = 0,
+ 		.family     = NFPROTO_IPV6,
+-		.match      = hl_mt6,
+-		.matchsize  = sizeof(struct ip6t_hl_info),
++		.target     = hl_tg6,
++		.targetsize = sizeof(struct ip6t_HL_info),
++		.table      = "mangle",
++		.checkentry = hl_tg6_check,
+ 		.me         = THIS_MODULE,
+ 	},
+ };
+ 
+-static int __init hl_mt_init(void)
++static int __init hl_tg_init(void)
+ {
+-	return xt_register_matches(hl_mt_reg, ARRAY_SIZE(hl_mt_reg));
++	return xt_register_targets(hl_tg_reg, ARRAY_SIZE(hl_tg_reg));
+ }
+ 
+-static void __exit hl_mt_exit(void)
++static void __exit hl_tg_exit(void)
+ {
+-	xt_unregister_matches(hl_mt_reg, ARRAY_SIZE(hl_mt_reg));
++	xt_unregister_targets(hl_tg_reg, ARRAY_SIZE(hl_tg_reg));
+ }
+ 
+-module_init(hl_mt_init);
+-module_exit(hl_mt_exit);
++module_init(hl_tg_init);
++module_exit(hl_tg_exit);
++MODULE_ALIAS("ipt_TTL");
++MODULE_ALIAS("ip6t_HL");
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_HL.c kernel-2.6.33/net/netfilter/xt_HL.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_HL.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_HL.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,171 +0,0 @@
+-/*
+- * TTL modification target for IP tables
+- * (C) 2000,2005 by Harald Welte <laforge@netfilter.org>
+- *
+- * Hop Limit modification target for ip6tables
+- * Maciej Soltysiak <solt@dns.toxicfilms.tv>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
+-
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-#include <linux/ip.h>
+-#include <linux/ipv6.h>
+-#include <net/checksum.h>
+-
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter_ipv4/ipt_TTL.h>
+-#include <linux/netfilter_ipv6/ip6t_HL.h>
+-
+-MODULE_AUTHOR("Harald Welte <laforge@netfilter.org>");
+-MODULE_AUTHOR("Maciej Soltysiak <solt@dns.toxicfilms.tv>");
+-MODULE_DESCRIPTION("Xtables: Hoplimit/TTL Limit field modification target");
+-MODULE_LICENSE("GPL");
+-
+-static unsigned int
+-ttl_tg(struct sk_buff *skb, const struct xt_target_param *par)
+-{
+-	struct iphdr *iph;
+-	const struct ipt_TTL_info *info = par->targinfo;
+-	int new_ttl;
+-
+-	if (!skb_make_writable(skb, skb->len))
+-		return NF_DROP;
+-
+-	iph = ip_hdr(skb);
+-
+-	switch (info->mode) {
+-		case IPT_TTL_SET:
+-			new_ttl = info->ttl;
+-			break;
+-		case IPT_TTL_INC:
+-			new_ttl = iph->ttl + info->ttl;
+-			if (new_ttl > 255)
+-				new_ttl = 255;
+-			break;
+-		case IPT_TTL_DEC:
+-			new_ttl = iph->ttl - info->ttl;
+-			if (new_ttl < 0)
+-				new_ttl = 0;
+-			break;
+-		default:
+-			new_ttl = iph->ttl;
+-			break;
+-	}
+-
+-	if (new_ttl != iph->ttl) {
+-		csum_replace2(&iph->check, htons(iph->ttl << 8),
+-					   htons(new_ttl << 8));
+-		iph->ttl = new_ttl;
+-	}
+-
+-	return XT_CONTINUE;
+-}
+-
+-static unsigned int
+-hl_tg6(struct sk_buff *skb, const struct xt_target_param *par)
+-{
+-	struct ipv6hdr *ip6h;
+-	const struct ip6t_HL_info *info = par->targinfo;
+-	int new_hl;
+-
+-	if (!skb_make_writable(skb, skb->len))
+-		return NF_DROP;
+-
+-	ip6h = ipv6_hdr(skb);
+-
+-	switch (info->mode) {
+-		case IP6T_HL_SET:
+-			new_hl = info->hop_limit;
+-			break;
+-		case IP6T_HL_INC:
+-			new_hl = ip6h->hop_limit + info->hop_limit;
+-			if (new_hl > 255)
+-				new_hl = 255;
+-			break;
+-		case IP6T_HL_DEC:
+-			new_hl = ip6h->hop_limit - info->hop_limit;
+-			if (new_hl < 0)
+-				new_hl = 0;
+-			break;
+-		default:
+-			new_hl = ip6h->hop_limit;
+-			break;
+-	}
+-
+-	ip6h->hop_limit = new_hl;
+-
+-	return XT_CONTINUE;
+-}
+-
+-static bool ttl_tg_check(const struct xt_tgchk_param *par)
+-{
+-	const struct ipt_TTL_info *info = par->targinfo;
+-
+-	if (info->mode > IPT_TTL_MAXMODE) {
+-		printk(KERN_WARNING "ipt_TTL: invalid or unknown Mode %u\n",
+-			info->mode);
+-		return false;
+-	}
+-	if (info->mode != IPT_TTL_SET && info->ttl == 0)
+-		return false;
+-	return true;
+-}
+-
+-static bool hl_tg6_check(const struct xt_tgchk_param *par)
+-{
+-	const struct ip6t_HL_info *info = par->targinfo;
+-
+-	if (info->mode > IP6T_HL_MAXMODE) {
+-		printk(KERN_WARNING "ip6t_HL: invalid or unknown Mode %u\n",
+-			info->mode);
+-		return false;
+-	}
+-	if (info->mode != IP6T_HL_SET && info->hop_limit == 0) {
+-		printk(KERN_WARNING "ip6t_HL: increment/decrement doesn't "
+-			"make sense with value 0\n");
+-		return false;
+-	}
+-	return true;
+-}
+-
+-static struct xt_target hl_tg_reg[] __read_mostly = {
+-	{
+-		.name       = "TTL",
+-		.revision   = 0,
+-		.family     = NFPROTO_IPV4,
+-		.target     = ttl_tg,
+-		.targetsize = sizeof(struct ipt_TTL_info),
+-		.table      = "mangle",
+-		.checkentry = ttl_tg_check,
+-		.me         = THIS_MODULE,
+-	},
+-	{
+-		.name       = "HL",
+-		.revision   = 0,
+-		.family     = NFPROTO_IPV6,
+-		.target     = hl_tg6,
+-		.targetsize = sizeof(struct ip6t_HL_info),
+-		.table      = "mangle",
+-		.checkentry = hl_tg6_check,
+-		.me         = THIS_MODULE,
+-	},
+-};
+-
+-static int __init hl_tg_init(void)
+-{
+-	return xt_register_targets(hl_tg_reg, ARRAY_SIZE(hl_tg_reg));
+-}
+-
+-static void __exit hl_tg_exit(void)
+-{
+-	xt_unregister_targets(hl_tg_reg, ARRAY_SIZE(hl_tg_reg));
+-}
+-
+-module_init(hl_tg_init);
+-module_exit(hl_tg_exit);
+-MODULE_ALIAS("ipt_TTL");
+-MODULE_ALIAS("ip6t_HL");
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_mark.c kernel-2.6.33/net/netfilter/xt_mark.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_mark.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_mark.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,53 +0,0 @@
+-/*
+- *	xt_mark - Netfilter module to match NFMARK value
+- *
+- *	(C) 1999-2001 Marc Boucher <marc@mbsi.ca>
+- *	Copyright © CC Computer Consultants GmbH, 2007 - 2008
+- *	Jan Engelhardt <jengelh@medozas.de>
+- *
+- *	This program is free software; you can redistribute it and/or modify
+- *	it under the terms of the GNU General Public License version 2 as
+- *	published by the Free Software Foundation.
+- */
+-
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-
+-#include <linux/netfilter/xt_mark.h>
+-#include <linux/netfilter/x_tables.h>
+-
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Marc Boucher <marc@mbsi.ca>");
+-MODULE_DESCRIPTION("Xtables: packet mark match");
+-MODULE_ALIAS("ipt_mark");
+-MODULE_ALIAS("ip6t_mark");
+-
+-static bool
+-mark_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_mark_mtinfo1 *info = par->matchinfo;
+-
+-	return ((skb->mark & info->mask) == info->mark) ^ info->invert;
+-}
+-
+-static struct xt_match mark_mt_reg __read_mostly = {
+-	.name           = "mark",
+-	.revision       = 1,
+-	.family         = NFPROTO_UNSPEC,
+-	.match          = mark_mt,
+-	.matchsize      = sizeof(struct xt_mark_mtinfo1),
+-	.me             = THIS_MODULE,
+-};
+-
+-static int __init mark_mt_init(void)
+-{
+-	return xt_register_match(&mark_mt_reg);
+-}
+-
+-static void __exit mark_mt_exit(void)
+-{
+-	xt_unregister_match(&mark_mt_reg);
+-}
+-
+-module_init(mark_mt_init);
+-module_exit(mark_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_MARK.c kernel-2.6.33/net/netfilter/xt_MARK.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_MARK.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_MARK.c	2011-05-11 17:36:32.000000000 +0300
+@@ -1,9 +1,9 @@
+ /*
+- *	xt_MARK - Netfilter module to modify the NFMARK field of an skb
++ *	xt_mark - Netfilter module to match NFMARK value
+  *
+  *	(C) 1999-2001 Marc Boucher <marc@mbsi.ca>
+  *	Copyright © CC Computer Consultants GmbH, 2007 - 2008
+- *	Jan Engelhardt <jengelh@computergmbh.de>
++ *	Jan Engelhardt <jengelh@medozas.de>
+  *
+  *	This program is free software; you can redistribute it and/or modify
+  *	it under the terms of the GNU General Public License version 2 as
+@@ -12,45 +12,42 @@
+ 
+ #include <linux/module.h>
+ #include <linux/skbuff.h>
+-#include <linux/ip.h>
+-#include <net/checksum.h>
+ 
++#include <linux/netfilter/xt_mark.h>
+ #include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_MARK.h>
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Marc Boucher <marc@mbsi.ca>");
+-MODULE_DESCRIPTION("Xtables: packet mark modification");
+-MODULE_ALIAS("ipt_MARK");
+-MODULE_ALIAS("ip6t_MARK");
++MODULE_DESCRIPTION("Xtables: packet mark match");
++MODULE_ALIAS("ipt_mark");
++MODULE_ALIAS("ip6t_mark");
+ 
+-static unsigned int
+-mark_tg(struct sk_buff *skb, const struct xt_target_param *par)
++static bool
++mark_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	const struct xt_mark_tginfo2 *info = par->targinfo;
++	const struct xt_mark_mtinfo1 *info = par->matchinfo;
+ 
+-	skb->mark = (skb->mark & ~info->mask) ^ info->mark;
+-	return XT_CONTINUE;
++	return ((skb->mark & info->mask) == info->mark) ^ info->invert;
+ }
+ 
+-static struct xt_target mark_tg_reg __read_mostly = {
+-	.name           = "MARK",
+-	.revision       = 2,
++static struct xt_match mark_mt_reg __read_mostly = {
++	.name           = "mark",
++	.revision       = 1,
+ 	.family         = NFPROTO_UNSPEC,
+-	.target         = mark_tg,
+-	.targetsize     = sizeof(struct xt_mark_tginfo2),
++	.match          = mark_mt,
++	.matchsize      = sizeof(struct xt_mark_mtinfo1),
+ 	.me             = THIS_MODULE,
+ };
+ 
+-static int __init mark_tg_init(void)
++static int __init mark_mt_init(void)
+ {
+-	return xt_register_target(&mark_tg_reg);
++	return xt_register_match(&mark_mt_reg);
+ }
+ 
+-static void __exit mark_tg_exit(void)
++static void __exit mark_mt_exit(void)
+ {
+-	xt_unregister_target(&mark_tg_reg);
++	xt_unregister_match(&mark_mt_reg);
+ }
+ 
+-module_init(mark_tg_init);
+-module_exit(mark_tg_exit);
++module_init(mark_mt_init);
++module_exit(mark_mt_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_rateest.c kernel-2.6.33/net/netfilter/xt_rateest.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_rateest.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_rateest.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,156 +0,0 @@
+-/*
+- * (C) 2007 Patrick McHardy <kaber@trash.net>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-#include <linux/gen_stats.h>
+-
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_rateest.h>
+-#include <net/netfilter/xt_rateest.h>
+-
+-
+-static bool
+-xt_rateest_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_rateest_match_info *info = par->matchinfo;
+-	struct gnet_stats_rate_est *r;
+-	u_int32_t bps1, bps2, pps1, pps2;
+-	bool ret = true;
+-
+-	spin_lock_bh(&info->est1->lock);
+-	r = &info->est1->rstats;
+-	if (info->flags & XT_RATEEST_MATCH_DELTA) {
+-		bps1 = info->bps1 >= r->bps ? info->bps1 - r->bps : 0;
+-		pps1 = info->pps1 >= r->pps ? info->pps1 - r->pps : 0;
+-	} else {
+-		bps1 = r->bps;
+-		pps1 = r->pps;
+-	}
+-	spin_unlock_bh(&info->est1->lock);
+-
+-	if (info->flags & XT_RATEEST_MATCH_ABS) {
+-		bps2 = info->bps2;
+-		pps2 = info->pps2;
+-	} else {
+-		spin_lock_bh(&info->est2->lock);
+-		r = &info->est2->rstats;
+-		if (info->flags & XT_RATEEST_MATCH_DELTA) {
+-			bps2 = info->bps2 >= r->bps ? info->bps2 - r->bps : 0;
+-			pps2 = info->pps2 >= r->pps ? info->pps2 - r->pps : 0;
+-		} else {
+-			bps2 = r->bps;
+-			pps2 = r->pps;
+-		}
+-		spin_unlock_bh(&info->est2->lock);
+-	}
+-
+-	switch (info->mode) {
+-	case XT_RATEEST_MATCH_LT:
+-		if (info->flags & XT_RATEEST_MATCH_BPS)
+-			ret &= bps1 < bps2;
+-		if (info->flags & XT_RATEEST_MATCH_PPS)
+-			ret &= pps1 < pps2;
+-		break;
+-	case XT_RATEEST_MATCH_GT:
+-		if (info->flags & XT_RATEEST_MATCH_BPS)
+-			ret &= bps1 > bps2;
+-		if (info->flags & XT_RATEEST_MATCH_PPS)
+-			ret &= pps1 > pps2;
+-		break;
+-	case XT_RATEEST_MATCH_EQ:
+-		if (info->flags & XT_RATEEST_MATCH_BPS)
+-			ret &= bps1 == bps2;
+-		if (info->flags & XT_RATEEST_MATCH_PPS)
+-			ret &= pps1 == pps2;
+-		break;
+-	}
+-
+-	ret ^= info->flags & XT_RATEEST_MATCH_INVERT ? true : false;
+-	return ret;
+-}
+-
+-static bool xt_rateest_mt_checkentry(const struct xt_mtchk_param *par)
+-{
+-	struct xt_rateest_match_info *info = par->matchinfo;
+-	struct xt_rateest *est1, *est2;
+-
+-	if (hweight32(info->flags & (XT_RATEEST_MATCH_ABS |
+-				     XT_RATEEST_MATCH_REL)) != 1)
+-		goto err1;
+-
+-	if (!(info->flags & (XT_RATEEST_MATCH_BPS | XT_RATEEST_MATCH_PPS)))
+-		goto err1;
+-
+-	switch (info->mode) {
+-	case XT_RATEEST_MATCH_EQ:
+-	case XT_RATEEST_MATCH_LT:
+-	case XT_RATEEST_MATCH_GT:
+-		break;
+-	default:
+-		goto err1;
+-	}
+-
+-	est1 = xt_rateest_lookup(info->name1);
+-	if (!est1)
+-		goto err1;
+-
+-	if (info->flags & XT_RATEEST_MATCH_REL) {
+-		est2 = xt_rateest_lookup(info->name2);
+-		if (!est2)
+-			goto err2;
+-	} else
+-		est2 = NULL;
+-
+-
+-	info->est1 = est1;
+-	info->est2 = est2;
+-	return true;
+-
+-err2:
+-	xt_rateest_put(est1);
+-err1:
+-	return false;
+-}
+-
+-static void xt_rateest_mt_destroy(const struct xt_mtdtor_param *par)
+-{
+-	struct xt_rateest_match_info *info = par->matchinfo;
+-
+-	xt_rateest_put(info->est1);
+-	if (info->est2)
+-		xt_rateest_put(info->est2);
+-}
+-
+-static struct xt_match xt_rateest_mt_reg __read_mostly = {
+-	.name       = "rateest",
+-	.revision   = 0,
+-	.family     = NFPROTO_UNSPEC,
+-	.match      = xt_rateest_mt,
+-	.checkentry = xt_rateest_mt_checkentry,
+-	.destroy    = xt_rateest_mt_destroy,
+-	.matchsize  = sizeof(struct xt_rateest_match_info),
+-	.me         = THIS_MODULE,
+-};
+-
+-static int __init xt_rateest_mt_init(void)
+-{
+-	return xt_register_match(&xt_rateest_mt_reg);
+-}
+-
+-static void __exit xt_rateest_mt_fini(void)
+-{
+-	xt_unregister_match(&xt_rateest_mt_reg);
+-}
+-
+-MODULE_AUTHOR("Patrick McHardy <kaber@trash.net>");
+-MODULE_LICENSE("GPL");
+-MODULE_DESCRIPTION("xtables rate estimator match");
+-MODULE_ALIAS("ipt_rateest");
+-MODULE_ALIAS("ip6t_rateest");
+-module_init(xt_rateest_mt_init);
+-module_exit(xt_rateest_mt_fini);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_RATEEST.c kernel-2.6.33/net/netfilter/xt_RATEEST.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_RATEEST.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_RATEEST.c	2011-05-11 17:36:32.000000000 +0300
+@@ -8,176 +8,149 @@
+ #include <linux/module.h>
+ #include <linux/skbuff.h>
+ #include <linux/gen_stats.h>
+-#include <linux/jhash.h>
+-#include <linux/rtnetlink.h>
+-#include <linux/random.h>
+-#include <net/gen_stats.h>
+-#include <net/netlink.h>
+ 
+ #include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_RATEEST.h>
++#include <linux/netfilter/xt_rateest.h>
+ #include <net/netfilter/xt_rateest.h>
+ 
+-static DEFINE_MUTEX(xt_rateest_mutex);
+ 
+-#define RATEEST_HSIZE	16
+-static struct hlist_head rateest_hash[RATEEST_HSIZE] __read_mostly;
+-static unsigned int jhash_rnd __read_mostly;
+-
+-static unsigned int xt_rateest_hash(const char *name)
++static bool
++xt_rateest_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+ {
+-	return jhash(name, FIELD_SIZEOF(struct xt_rateest, name), jhash_rnd) &
+-	       (RATEEST_HSIZE - 1);
+-}
+-
+-static void xt_rateest_hash_insert(struct xt_rateest *est)
+-{
+-	unsigned int h;
+-
+-	h = xt_rateest_hash(est->name);
+-	hlist_add_head(&est->list, &rateest_hash[h]);
+-}
++	const struct xt_rateest_match_info *info = par->matchinfo;
++	struct gnet_stats_rate_est *r;
++	u_int32_t bps1, bps2, pps1, pps2;
++	bool ret = true;
++
++	spin_lock_bh(&info->est1->lock);
++	r = &info->est1->rstats;
++	if (info->flags & XT_RATEEST_MATCH_DELTA) {
++		bps1 = info->bps1 >= r->bps ? info->bps1 - r->bps : 0;
++		pps1 = info->pps1 >= r->pps ? info->pps1 - r->pps : 0;
++	} else {
++		bps1 = r->bps;
++		pps1 = r->pps;
++	}
++	spin_unlock_bh(&info->est1->lock);
+ 
+-struct xt_rateest *xt_rateest_lookup(const char *name)
+-{
+-	struct xt_rateest *est;
+-	struct hlist_node *n;
+-	unsigned int h;
+-
+-	h = xt_rateest_hash(name);
+-	mutex_lock(&xt_rateest_mutex);
+-	hlist_for_each_entry(est, n, &rateest_hash[h], list) {
+-		if (strcmp(est->name, name) == 0) {
+-			est->refcnt++;
+-			mutex_unlock(&xt_rateest_mutex);
+-			return est;
++	if (info->flags & XT_RATEEST_MATCH_ABS) {
++		bps2 = info->bps2;
++		pps2 = info->pps2;
++	} else {
++		spin_lock_bh(&info->est2->lock);
++		r = &info->est2->rstats;
++		if (info->flags & XT_RATEEST_MATCH_DELTA) {
++			bps2 = info->bps2 >= r->bps ? info->bps2 - r->bps : 0;
++			pps2 = info->pps2 >= r->pps ? info->pps2 - r->pps : 0;
++		} else {
++			bps2 = r->bps;
++			pps2 = r->pps;
+ 		}
++		spin_unlock_bh(&info->est2->lock);
+ 	}
+-	mutex_unlock(&xt_rateest_mutex);
+-	return NULL;
+-}
+-EXPORT_SYMBOL_GPL(xt_rateest_lookup);
+ 
+-void xt_rateest_put(struct xt_rateest *est)
+-{
+-	mutex_lock(&xt_rateest_mutex);
+-	if (--est->refcnt == 0) {
+-		hlist_del(&est->list);
+-		gen_kill_estimator(&est->bstats, &est->rstats);
+-		kfree(est);
++	switch (info->mode) {
++	case XT_RATEEST_MATCH_LT:
++		if (info->flags & XT_RATEEST_MATCH_BPS)
++			ret &= bps1 < bps2;
++		if (info->flags & XT_RATEEST_MATCH_PPS)
++			ret &= pps1 < pps2;
++		break;
++	case XT_RATEEST_MATCH_GT:
++		if (info->flags & XT_RATEEST_MATCH_BPS)
++			ret &= bps1 > bps2;
++		if (info->flags & XT_RATEEST_MATCH_PPS)
++			ret &= pps1 > pps2;
++		break;
++	case XT_RATEEST_MATCH_EQ:
++		if (info->flags & XT_RATEEST_MATCH_BPS)
++			ret &= bps1 == bps2;
++		if (info->flags & XT_RATEEST_MATCH_PPS)
++			ret &= pps1 == pps2;
++		break;
+ 	}
+-	mutex_unlock(&xt_rateest_mutex);
++
++	ret ^= info->flags & XT_RATEEST_MATCH_INVERT ? true : false;
++	return ret;
+ }
+-EXPORT_SYMBOL_GPL(xt_rateest_put);
+ 
+-static unsigned int
+-xt_rateest_tg(struct sk_buff *skb, const struct xt_target_param *par)
++static bool xt_rateest_mt_checkentry(const struct xt_mtchk_param *par)
+ {
+-	const struct xt_rateest_target_info *info = par->targinfo;
+-	struct gnet_stats_basic_packed *stats = &info->est->bstats;
++	struct xt_rateest_match_info *info = par->matchinfo;
++	struct xt_rateest *est1, *est2;
+ 
+-	spin_lock_bh(&info->est->lock);
+-	stats->bytes += skb->len;
+-	stats->packets++;
+-	spin_unlock_bh(&info->est->lock);
++	if (hweight32(info->flags & (XT_RATEEST_MATCH_ABS |
++				     XT_RATEEST_MATCH_REL)) != 1)
++		goto err1;
+ 
+-	return XT_CONTINUE;
+-}
++	if (!(info->flags & (XT_RATEEST_MATCH_BPS | XT_RATEEST_MATCH_PPS)))
++		goto err1;
+ 
+-static bool xt_rateest_tg_checkentry(const struct xt_tgchk_param *par)
+-{
+-	struct xt_rateest_target_info *info = par->targinfo;
+-	struct xt_rateest *est;
+-	struct {
+-		struct nlattr		opt;
+-		struct gnet_estimator	est;
+-	} cfg;
+-
+-	est = xt_rateest_lookup(info->name);
+-	if (est) {
+-		/*
+-		 * If estimator parameters are specified, they must match the
+-		 * existing estimator.
+-		 */
+-		if ((!info->interval && !info->ewma_log) ||
+-		    (info->interval != est->params.interval ||
+-		     info->ewma_log != est->params.ewma_log)) {
+-			xt_rateest_put(est);
+-			return false;
+-		}
+-		info->est = est;
+-		return true;
++	switch (info->mode) {
++	case XT_RATEEST_MATCH_EQ:
++	case XT_RATEEST_MATCH_LT:
++	case XT_RATEEST_MATCH_GT:
++		break;
++	default:
++		goto err1;
+ 	}
+ 
+-	est = kzalloc(sizeof(*est), GFP_KERNEL);
+-	if (!est)
++	est1 = xt_rateest_lookup(info->name1);
++	if (!est1)
+ 		goto err1;
+ 
+-	strlcpy(est->name, info->name, sizeof(est->name));
+-	spin_lock_init(&est->lock);
+-	est->refcnt		= 1;
+-	est->params.interval	= info->interval;
+-	est->params.ewma_log	= info->ewma_log;
+-
+-	cfg.opt.nla_len		= nla_attr_size(sizeof(cfg.est));
+-	cfg.opt.nla_type	= TCA_STATS_RATE_EST;
+-	cfg.est.interval	= info->interval;
+-	cfg.est.ewma_log	= info->ewma_log;
+-
+-	if (gen_new_estimator(&est->bstats, &est->rstats, &est->lock,
+-			      &cfg.opt) < 0)
+-		goto err2;
++	if (info->flags & XT_RATEEST_MATCH_REL) {
++		est2 = xt_rateest_lookup(info->name2);
++		if (!est2)
++			goto err2;
++	} else
++		est2 = NULL;
+ 
+-	info->est = est;
+-	xt_rateest_hash_insert(est);
+ 
++	info->est1 = est1;
++	info->est2 = est2;
+ 	return true;
+ 
+ err2:
+-	kfree(est);
++	xt_rateest_put(est1);
+ err1:
+ 	return false;
+ }
+ 
+-static void xt_rateest_tg_destroy(const struct xt_tgdtor_param *par)
++static void xt_rateest_mt_destroy(const struct xt_mtdtor_param *par)
+ {
+-	struct xt_rateest_target_info *info = par->targinfo;
++	struct xt_rateest_match_info *info = par->matchinfo;
+ 
+-	xt_rateest_put(info->est);
++	xt_rateest_put(info->est1);
++	if (info->est2)
++		xt_rateest_put(info->est2);
+ }
+ 
+-static struct xt_target xt_rateest_tg_reg __read_mostly = {
+-	.name       = "RATEEST",
++static struct xt_match xt_rateest_mt_reg __read_mostly = {
++	.name       = "rateest",
+ 	.revision   = 0,
+ 	.family     = NFPROTO_UNSPEC,
+-	.target     = xt_rateest_tg,
+-	.checkentry = xt_rateest_tg_checkentry,
+-	.destroy    = xt_rateest_tg_destroy,
+-	.targetsize = sizeof(struct xt_rateest_target_info),
++	.match      = xt_rateest_mt,
++	.checkentry = xt_rateest_mt_checkentry,
++	.destroy    = xt_rateest_mt_destroy,
++	.matchsize  = sizeof(struct xt_rateest_match_info),
+ 	.me         = THIS_MODULE,
+ };
+ 
+-static int __init xt_rateest_tg_init(void)
++static int __init xt_rateest_mt_init(void)
+ {
+-	unsigned int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(rateest_hash); i++)
+-		INIT_HLIST_HEAD(&rateest_hash[i]);
+-
+-	get_random_bytes(&jhash_rnd, sizeof(jhash_rnd));
+-	return xt_register_target(&xt_rateest_tg_reg);
++	return xt_register_match(&xt_rateest_mt_reg);
+ }
+ 
+-static void __exit xt_rateest_tg_fini(void)
++static void __exit xt_rateest_mt_fini(void)
+ {
+-	xt_unregister_target(&xt_rateest_tg_reg);
++	xt_unregister_match(&xt_rateest_mt_reg);
+ }
+ 
+-
+ MODULE_AUTHOR("Patrick McHardy <kaber@trash.net>");
+ MODULE_LICENSE("GPL");
+-MODULE_DESCRIPTION("Xtables: packet rate estimator");
+-MODULE_ALIAS("ipt_RATEEST");
+-MODULE_ALIAS("ip6t_RATEEST");
+-module_init(xt_rateest_tg_init);
+-module_exit(xt_rateest_tg_fini);
++MODULE_DESCRIPTION("xtables rate estimator match");
++MODULE_ALIAS("ipt_rateest");
++MODULE_ALIAS("ip6t_rateest");
++module_init(xt_rateest_mt_init);
++module_exit(xt_rateest_mt_fini);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_tcpmss.c kernel-2.6.33/net/netfilter/xt_tcpmss.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_tcpmss.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_tcpmss.c	2011-05-11 17:36:32.000000000 +0300
+@@ -1,7 +1,7 @@
+-/* Kernel module to match TCP MSS values. */
+-
+-/* Copyright (C) 2000 Marc Boucher <marc@mbsi.ca>
+- * Portions (C) 2005 by Harald Welte <laforge@netfilter.org>
++/*
++ * This is a module which is used for setting the MSS option in TCP packets.
++ *
++ * Copyright (C) 2000 Marc Boucher <marc@mbsi.ca>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -10,101 +10,305 @@
+ 
+ #include <linux/module.h>
+ #include <linux/skbuff.h>
++#include <linux/ip.h>
++#include <linux/ipv6.h>
++#include <linux/tcp.h>
++#include <net/dst.h>
++#include <net/flow.h>
++#include <net/ipv6.h>
++#include <net/route.h>
+ #include <net/tcp.h>
+ 
+-#include <linux/netfilter/xt_tcpmss.h>
+-#include <linux/netfilter/x_tables.h>
+-
+ #include <linux/netfilter_ipv4/ip_tables.h>
+ #include <linux/netfilter_ipv6/ip6_tables.h>
++#include <linux/netfilter/x_tables.h>
++#include <linux/netfilter/xt_tcpudp.h>
++#include <linux/netfilter/xt_TCPMSS.h>
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Marc Boucher <marc@mbsi.ca>");
+-MODULE_DESCRIPTION("Xtables: TCP MSS match");
+-MODULE_ALIAS("ipt_tcpmss");
+-MODULE_ALIAS("ip6t_tcpmss");
+-
+-static bool
+-tcpmss_mt(const struct sk_buff *skb, const struct xt_match_param *par)
+-{
+-	const struct xt_tcpmss_match_info *info = par->matchinfo;
+-	const struct tcphdr *th;
+-	struct tcphdr _tcph;
+-	/* tcp.doff is only 4 bits, ie. max 15 * 4 bytes */
+-	const u_int8_t *op;
+-	u8 _opt[15 * 4 - sizeof(_tcph)];
+-	unsigned int i, optlen;
+-
+-	/* If we don't have the whole header, drop packet. */
+-	th = skb_header_pointer(skb, par->thoff, sizeof(_tcph), &_tcph);
+-	if (th == NULL)
+-		goto dropit;
+-
+-	/* Malformed. */
+-	if (th->doff*4 < sizeof(*th))
+-		goto dropit;
+-
+-	optlen = th->doff*4 - sizeof(*th);
+-	if (!optlen)
+-		goto out;
+-
+-	/* Truncated options. */
+-	op = skb_header_pointer(skb, par->thoff + sizeof(*th), optlen, _opt);
+-	if (op == NULL)
+-		goto dropit;
+-
+-	for (i = 0; i < optlen; ) {
+-		if (op[i] == TCPOPT_MSS
+-		    && (optlen - i) >= TCPOLEN_MSS
+-		    && op[i+1] == TCPOLEN_MSS) {
+-			u_int16_t mssval;
++MODULE_DESCRIPTION("Xtables: TCP Maximum Segment Size (MSS) adjustment");
++MODULE_ALIAS("ipt_TCPMSS");
++MODULE_ALIAS("ip6t_TCPMSS");
++
++static inline unsigned int
++optlen(const u_int8_t *opt, unsigned int offset)
++{
++	/* Beware zero-length options: make finite progress */
++	if (opt[offset] <= TCPOPT_NOP || opt[offset+1] == 0)
++		return 1;
++	else
++		return opt[offset+1];
++}
+ 
+-			mssval = (op[i+2] << 8) | op[i+3];
++static int
++tcpmss_mangle_packet(struct sk_buff *skb,
++		     const struct xt_tcpmss_info *info,
++		     unsigned int in_mtu,
++		     unsigned int tcphoff,
++		     unsigned int minlen)
++{
++	struct tcphdr *tcph;
++	unsigned int tcplen, i;
++	__be16 oldval;
++	u16 newmss;
++	u8 *opt;
++
++	if (!skb_make_writable(skb, skb->len))
++		return -1;
++
++	tcplen = skb->len - tcphoff;
++	tcph = (struct tcphdr *)(skb_network_header(skb) + tcphoff);
++
++	/* Since it passed flags test in tcp match, we know it is is
++	   not a fragment, and has data >= tcp header length.  SYN
++	   packets should not contain data: if they did, then we risk
++	   running over MTU, sending Frag Needed and breaking things
++	   badly. --RR */
++	if (tcplen != tcph->doff*4) {
++		if (net_ratelimit())
++			printk(KERN_ERR "xt_TCPMSS: bad length (%u bytes)\n",
++			       skb->len);
++		return -1;
++	}
+ 
+-			return (mssval >= info->mss_min &&
+-				mssval <= info->mss_max) ^ info->invert;
++	if (info->mss == XT_TCPMSS_CLAMP_PMTU) {
++		if (dst_mtu(skb_dst(skb)) <= minlen) {
++			if (net_ratelimit())
++				printk(KERN_ERR "xt_TCPMSS: "
++				       "unknown or invalid path-MTU (%u)\n",
++				       dst_mtu(skb_dst(skb)));
++			return -1;
++		}
++		if (in_mtu <= minlen) {
++			if (net_ratelimit())
++				printk(KERN_ERR "xt_TCPMSS: unknown or "
++				       "invalid path-MTU (%u)\n", in_mtu);
++			return -1;
++		}
++		newmss = min(dst_mtu(skb_dst(skb)), in_mtu) - minlen;
++	} else
++		newmss = info->mss;
++
++	opt = (u_int8_t *)tcph;
++	for (i = sizeof(struct tcphdr); i < tcph->doff*4; i += optlen(opt, i)) {
++		if (opt[i] == TCPOPT_MSS && tcph->doff*4 - i >= TCPOLEN_MSS &&
++		    opt[i+1] == TCPOLEN_MSS) {
++			u_int16_t oldmss;
++
++			oldmss = (opt[i+2] << 8) | opt[i+3];
++
++			/* Never increase MSS, even when setting it, as
++			 * doing so results in problems for hosts that rely
++			 * on MSS being set correctly.
++			 */
++			if (oldmss <= newmss)
++				return 0;
++
++			opt[i+2] = (newmss & 0xff00) >> 8;
++			opt[i+3] = newmss & 0x00ff;
++
++			inet_proto_csum_replace2(&tcph->check, skb,
++						 htons(oldmss), htons(newmss),
++						 0);
++			return 0;
+ 		}
+-		if (op[i] < 2)
+-			i++;
+-		else
+-			i += op[i+1] ? : 1;
+ 	}
+-out:
+-	return info->invert;
+ 
+-dropit:
+-	*par->hotdrop = true;
++	/*
++	 * MSS Option not found ?! add it..
++	 */
++	if (skb_tailroom(skb) < TCPOLEN_MSS) {
++		if (pskb_expand_head(skb, 0,
++				     TCPOLEN_MSS - skb_tailroom(skb),
++				     GFP_ATOMIC))
++			return -1;
++		tcph = (struct tcphdr *)(skb_network_header(skb) + tcphoff);
++	}
++
++	skb_put(skb, TCPOLEN_MSS);
++
++	opt = (u_int8_t *)tcph + sizeof(struct tcphdr);
++	memmove(opt + TCPOLEN_MSS, opt, tcplen - sizeof(struct tcphdr));
++
++	inet_proto_csum_replace2(&tcph->check, skb,
++				 htons(tcplen), htons(tcplen + TCPOLEN_MSS), 1);
++	opt[0] = TCPOPT_MSS;
++	opt[1] = TCPOLEN_MSS;
++	opt[2] = (newmss & 0xff00) >> 8;
++	opt[3] = newmss & 0x00ff;
++
++	inet_proto_csum_replace4(&tcph->check, skb, 0, *((__be32 *)opt), 0);
++
++	oldval = ((__be16 *)tcph)[6];
++	tcph->doff += TCPOLEN_MSS/4;
++	inet_proto_csum_replace2(&tcph->check, skb,
++				 oldval, ((__be16 *)tcph)[6], 0);
++	return TCPOLEN_MSS;
++}
++
++static u_int32_t tcpmss_reverse_mtu(const struct sk_buff *skb,
++				    unsigned int family)
++{
++	struct flowi fl = {};
++	const struct nf_afinfo *ai;
++	struct rtable *rt = NULL;
++	u_int32_t mtu     = ~0U;
++
++	if (family == PF_INET)
++		fl.fl4_dst = ip_hdr(skb)->saddr;
++	else
++		fl.fl6_dst = ipv6_hdr(skb)->saddr;
++
++	rcu_read_lock();
++	ai = nf_get_afinfo(family);
++	if (ai != NULL)
++		ai->route((struct dst_entry **)&rt, &fl);
++	rcu_read_unlock();
++
++	if (rt != NULL) {
++		mtu = dst_mtu(&rt->u.dst);
++		dst_release(&rt->u.dst);
++	}
++	return mtu;
++}
++
++static unsigned int
++tcpmss_tg4(struct sk_buff *skb, const struct xt_target_param *par)
++{
++	struct iphdr *iph = ip_hdr(skb);
++	__be16 newlen;
++	int ret;
++
++	ret = tcpmss_mangle_packet(skb, par->targinfo,
++				   tcpmss_reverse_mtu(skb, PF_INET),
++				   iph->ihl * 4,
++				   sizeof(*iph) + sizeof(struct tcphdr));
++	if (ret < 0)
++		return NF_DROP;
++	if (ret > 0) {
++		iph = ip_hdr(skb);
++		newlen = htons(ntohs(iph->tot_len) + ret);
++		csum_replace2(&iph->check, iph->tot_len, newlen);
++		iph->tot_len = newlen;
++	}
++	return XT_CONTINUE;
++}
++
++#if defined(CONFIG_IP6_NF_IPTABLES) || defined(CONFIG_IP6_NF_IPTABLES_MODULE)
++static unsigned int
++tcpmss_tg6(struct sk_buff *skb, const struct xt_target_param *par)
++{
++	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
++	u8 nexthdr;
++	int tcphoff;
++	int ret;
++
++	nexthdr = ipv6h->nexthdr;
++	tcphoff = ipv6_skip_exthdr(skb, sizeof(*ipv6h), &nexthdr);
++	if (tcphoff < 0)
++		return NF_DROP;
++	ret = tcpmss_mangle_packet(skb, par->targinfo,
++				   tcpmss_reverse_mtu(skb, PF_INET6),
++				   tcphoff,
++				   sizeof(*ipv6h) + sizeof(struct tcphdr));
++	if (ret < 0)
++		return NF_DROP;
++	if (ret > 0) {
++		ipv6h = ipv6_hdr(skb);
++		ipv6h->payload_len = htons(ntohs(ipv6h->payload_len) + ret);
++	}
++	return XT_CONTINUE;
++}
++#endif
++
++#define TH_SYN 0x02
++
++/* Must specify -p tcp --syn */
++static inline bool find_syn_match(const struct xt_entry_match *m)
++{
++	const struct xt_tcp *tcpinfo = (const struct xt_tcp *)m->data;
++
++	if (strcmp(m->u.kernel.match->name, "tcp") == 0 &&
++	    tcpinfo->flg_cmp & TH_SYN &&
++	    !(tcpinfo->invflags & XT_TCP_INV_FLAGS))
++		return true;
++
++	return false;
++}
++
++static bool tcpmss_tg4_check(const struct xt_tgchk_param *par)
++{
++	const struct xt_tcpmss_info *info = par->targinfo;
++	const struct ipt_entry *e = par->entryinfo;
++
++	if (info->mss == XT_TCPMSS_CLAMP_PMTU &&
++	    (par->hook_mask & ~((1 << NF_INET_FORWARD) |
++			   (1 << NF_INET_LOCAL_OUT) |
++			   (1 << NF_INET_POST_ROUTING))) != 0) {
++		printk("xt_TCPMSS: path-MTU clamping only supported in "
++		       "FORWARD, OUTPUT and POSTROUTING hooks\n");
++		return false;
++	}
++	if (IPT_MATCH_ITERATE(e, find_syn_match))
++		return true;
++	printk("xt_TCPMSS: Only works on TCP SYN packets\n");
++	return false;
++}
++
++#if defined(CONFIG_IP6_NF_IPTABLES) || defined(CONFIG_IP6_NF_IPTABLES_MODULE)
++static bool tcpmss_tg6_check(const struct xt_tgchk_param *par)
++{
++	const struct xt_tcpmss_info *info = par->targinfo;
++	const struct ip6t_entry *e = par->entryinfo;
++
++	if (info->mss == XT_TCPMSS_CLAMP_PMTU &&
++	    (par->hook_mask & ~((1 << NF_INET_FORWARD) |
++			   (1 << NF_INET_LOCAL_OUT) |
++			   (1 << NF_INET_POST_ROUTING))) != 0) {
++		printk("xt_TCPMSS: path-MTU clamping only supported in "
++		       "FORWARD, OUTPUT and POSTROUTING hooks\n");
++		return false;
++	}
++	if (IP6T_MATCH_ITERATE(e, find_syn_match))
++		return true;
++	printk("xt_TCPMSS: Only works on TCP SYN packets\n");
+ 	return false;
+ }
++#endif
+ 
+-static struct xt_match tcpmss_mt_reg[] __read_mostly = {
++static struct xt_target tcpmss_tg_reg[] __read_mostly = {
+ 	{
+-		.name		= "tcpmss",
+ 		.family		= NFPROTO_IPV4,
+-		.match		= tcpmss_mt,
+-		.matchsize	= sizeof(struct xt_tcpmss_match_info),
++		.name		= "TCPMSS",
++		.checkentry	= tcpmss_tg4_check,
++		.target		= tcpmss_tg4,
++		.targetsize	= sizeof(struct xt_tcpmss_info),
+ 		.proto		= IPPROTO_TCP,
+ 		.me		= THIS_MODULE,
+ 	},
++#if defined(CONFIG_IP6_NF_IPTABLES) || defined(CONFIG_IP6_NF_IPTABLES_MODULE)
+ 	{
+-		.name		= "tcpmss",
+ 		.family		= NFPROTO_IPV6,
+-		.match		= tcpmss_mt,
+-		.matchsize	= sizeof(struct xt_tcpmss_match_info),
++		.name		= "TCPMSS",
++		.checkentry	= tcpmss_tg6_check,
++		.target		= tcpmss_tg6,
++		.targetsize	= sizeof(struct xt_tcpmss_info),
+ 		.proto		= IPPROTO_TCP,
+ 		.me		= THIS_MODULE,
+ 	},
++#endif
+ };
+ 
+-static int __init tcpmss_mt_init(void)
++static int __init tcpmss_tg_init(void)
+ {
+-	return xt_register_matches(tcpmss_mt_reg, ARRAY_SIZE(tcpmss_mt_reg));
++	return xt_register_targets(tcpmss_tg_reg, ARRAY_SIZE(tcpmss_tg_reg));
+ }
+ 
+-static void __exit tcpmss_mt_exit(void)
++static void __exit tcpmss_tg_exit(void)
+ {
+-	xt_unregister_matches(tcpmss_mt_reg, ARRAY_SIZE(tcpmss_mt_reg));
++	xt_unregister_targets(tcpmss_tg_reg, ARRAY_SIZE(tcpmss_tg_reg));
+ }
+ 
+-module_init(tcpmss_mt_init);
+-module_exit(tcpmss_mt_exit);
++module_init(tcpmss_tg_init);
++module_exit(tcpmss_tg_exit);
+diff -Nur -x TEST.doc -x TEST.DOC -x system.dts -x '*.txt' linux-2.6.33.7.2-rt30/net/netfilter/xt_TCPMSS.c kernel-2.6.33/net/netfilter/xt_TCPMSS.c
+--- linux-2.6.33.7.2-rt30/net/netfilter/xt_TCPMSS.c	2010-08-02 20:27:18.000000000 +0300
++++ kernel-2.6.33/net/netfilter/xt_TCPMSS.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,314 +0,0 @@
+-/*
+- * This is a module which is used for setting the MSS option in TCP packets.
+- *
+- * Copyright (C) 2000 Marc Boucher <marc@mbsi.ca>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
+-
+-#include <linux/module.h>
+-#include <linux/skbuff.h>
+-#include <linux/ip.h>
+-#include <linux/ipv6.h>
+-#include <linux/tcp.h>
+-#include <net/dst.h>
+-#include <net/flow.h>
+-#include <net/ipv6.h>
+-#include <net/route.h>
+-#include <net/tcp.h>
+-
+-#include <linux/netfilter_ipv4/ip_tables.h>
+-#include <linux/netfilter_ipv6/ip6_tables.h>
+-#include <linux/netfilter/x_tables.h>
+-#include <linux/netfilter/xt_tcpudp.h>
+-#include <linux/netfilter/xt_TCPMSS.h>
+-
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Marc Boucher <marc@mbsi.ca>");
+-MODULE_DESCRIPTION("Xtables: TCP Maximum Segment Size (MSS) adjustment");
+-MODULE_ALIAS("ipt_TCPMSS");
+-MODULE_ALIAS("ip6t_TCPMSS");
+-
+-static inline unsigned int
+-optlen(const u_int8_t *opt, unsigned int offset)
+-{
+-	/* Beware zero-length options: make finite progress */
+-	if (opt[offset] <= TCPOPT_NOP || opt[offset+1] == 0)
+-		return 1;
+-	else
+-		return opt[offset+1];
+-}
+-
+-static int
+-tcpmss_mangle_packet(struct sk_buff *skb,
+-		     const struct xt_tcpmss_info *info,
+-		     unsigned int in_mtu,
+-		     unsigned int tcphoff,
+-		     unsigned int minlen)
+-{
+-	struct tcphdr *tcph;
+-	unsigned int tcplen, i;
+-	__be16 oldval;
+-	u16 newmss;
+-	u8 *opt;
+-
+-	if (!skb_make_writable(skb, skb->len))
+-		return -1;
+-
+-	tcplen = skb->len - tcphoff;
+-	tcph = (struct tcphdr *)(skb_network_header(skb) + tcphoff);
+-
+-	/* Since it passed flags test in tcp match, we know it is is
+-	   not a fragment, and has data >= tcp header length.  SYN
+-	   packets should not contain data: if they did, then we risk
+-	   running over MTU, sending Frag Needed and breaking things
+-	   badly. --RR */
+-	if (tcplen != tcph->doff*4) {
+-		if (net_ratelimit())
+-			printk(KERN_ERR "xt_TCPMSS: bad length (%u bytes)\n",
+-			       skb->len);
+-		return -1;
+-	}
+-
+-	if (info->mss == XT_TCPMSS_CLAMP_PMTU) {
+-		if (dst_mtu(skb_dst(skb)) <= minlen) {
+-			if (net_ratelimit())
+-				printk(KERN_ERR "xt_TCPMSS: "
+-				       "unknown or invalid path-MTU (%u)\n",
+-				       dst_mtu(skb_dst(skb)));
+-			return -1;
+-		}
+-		if (in_mtu <= minlen) {
+-			if (net_ratelimit())
+-				printk(KERN_ERR "xt_TCPMSS: unknown or "
+-				       "invalid path-MTU (%u)\n", in_mtu);
+-			return -1;
+-		}
+-		newmss = min(dst_mtu(skb_dst(skb)), in_mtu) - minlen;
+-	} else
+-		newmss = info->mss;
+-
+-	opt = (u_int8_t *)tcph;
+-	for (i = sizeof(struct tcphdr); i < tcph->doff*4; i += optlen(opt, i)) {
+-		if (opt[i] == TCPOPT_MSS && tcph->doff*4 - i >= TCPOLEN_MSS &&
+-		    opt[i+1] == TCPOLEN_MSS) {
+-			u_int16_t oldmss;
+-
+-			oldmss = (opt[i+2] << 8) | opt[i+3];
+-
+-			/* Never increase MSS, even when setting it, as
+-			 * doing so results in problems for hosts that rely
+-			 * on MSS being set correctly.
+-			 */
+-			if (oldmss <= newmss)
+-				return 0;
+-
+-			opt[i+2] = (newmss & 0xff00) >> 8;
+-			opt[i+3] = newmss & 0x00ff;
+-
+-			inet_proto_csum_replace2(&tcph->check, skb,
+-						 htons(oldmss), htons(newmss),
+-						 0);
+-			return 0;
+-		}
+-	}
+-
+-	/*
+-	 * MSS Option not found ?! add it..
+-	 */
+-	if (skb_tailroom(skb) < TCPOLEN_MSS) {
+-		if (pskb_expand_head(skb, 0,
+-				     TCPOLEN_MSS - skb_tailroom(skb),
+-				     GFP_ATOMIC))
+-			return -1;
+-		tcph = (struct tcphdr *)(skb_network_header(skb) + tcphoff);
+-	}
+-
+-	skb_put(skb, TCPOLEN_MSS);
+-
+-	opt = (u_int8_t *)tcph + sizeof(struct tcphdr);
+-	memmove(opt + TCPOLEN_MSS, opt, tcplen - sizeof(struct tcphdr));
+-
+-	inet_proto_csum_replace2(&tcph->check, skb,
+-				 htons(tcplen), htons(tcplen + TCPOLEN_MSS), 1);
+-	opt[0] = TCPOPT_MSS;
+-	opt[1] = TCPOLEN_MSS;
+-	opt[2] = (newmss & 0xff00) >> 8;
+-	opt[3] = newmss & 0x00ff;
+-
+-	inet_proto_csum_replace4(&tcph->check, skb, 0, *((__be32 *)opt), 0);
+-
+-	oldval = ((__be16 *)tcph)[6];
+-	tcph->doff += TCPOLEN_MSS/4;
+-	inet_proto_csum_replace2(&tcph->check, skb,
+-				 oldval, ((__be16 *)tcph)[6], 0);
+-	return TCPOLEN_MSS;
+-}
+-
+-static u_int32_t tcpmss_reverse_mtu(const struct sk_buff *skb,
+-				    unsigned int family)
+-{
+-	struct flowi fl = {};
+-	const struct nf_afinfo *ai;
+-	struct rtable *rt = NULL;
+-	u_int32_t mtu     = ~0U;
+-
+-	if (family == PF_INET)
+-		fl.fl4_dst = ip_hdr(skb)->saddr;
+-	else
+-		fl.fl6_dst = ipv6_hdr(skb)->saddr;
+-
+-	rcu_read_lock();
+-	ai = nf_get_afinfo(family);
+-	if (ai != NULL)
+-		ai->route((struct dst_entry **)&rt, &fl);
+-	rcu_read_unlock();
+-
+-	if (rt != NULL) {
+-		mtu = dst_mtu(&rt->u.dst);
+-		dst_release(&rt->u.dst);
+-	}
+-	return mtu;
+-}
+-
+-static unsigned int
+-tcpmss_tg4(struct sk_buff *skb, const struct xt_target_param *par)
+-{
+-	struct iphdr *iph = ip_hdr(skb);
+-	__be16 newlen;
+-	int ret;
+-
+-	ret = tcpmss_mangle_packet(skb, par->targinfo,
+-				   tcpmss_reverse_mtu(skb, PF_INET),
+-				   iph->ihl * 4,
+-				   sizeof(*iph) + sizeof(struct tcphdr));
+-	if (ret < 0)
+-		return NF_DROP;
+-	if (ret > 0) {
+-		iph = ip_hdr(skb);
+-		newlen = htons(ntohs(iph->tot_len) + ret);
+-		csum_replace2(&iph->check, iph->tot_len, newlen);
+-		iph->tot_len = newlen;
+-	}
+-	return XT_CONTINUE;
+-}
+-
+-#if defined(CONFIG_IP6_NF_IPTABLES) || defined(CONFIG_IP6_NF_IPTABLES_MODULE)
+-static unsigned int
+-tcpmss_tg6(struct sk_buff *skb, const struct xt_target_param *par)
+-{
+-	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
+-	u8 nexthdr;
+-	int tcphoff;
+-	int ret;
+-
+-	nexthdr = ipv6h->nexthdr;
+-	tcphoff = ipv6_skip_exthdr(skb, sizeof(*ipv6h), &nexthdr);
+-	if (tcphoff < 0)
+-		return NF_DROP;
+-	ret = tcpmss_mangle_packet(skb, par->targinfo,
+-				   tcpmss_reverse_mtu(skb, PF_INET6),
+-				   tcphoff,
+-				   sizeof(*ipv6h) + sizeof(struct tcphdr));
+-	if (ret < 0)
+-		return NF_DROP;
+-	if (ret > 0) {
+-		ipv6h = ipv6_hdr(skb);
+-		ipv6h->payload_len = htons(ntohs(ipv6h->payload_len) + ret);
+-	}
+-	return XT_CONTINUE;
+-}
+-#endif
+-
+-#define TH_SYN 0x02
+-
+-/* Must specify -p tcp --syn */
+-static inline bool find_syn_match(const struct xt_entry_match *m)
+-{
+-	const struct xt_tcp *tcpinfo = (const struct xt_tcp *)m->data;
+-
+-	if (strcmp(m->u.kernel.match->name, "tcp") == 0 &&
+-	    tcpinfo->flg_cmp & TH_SYN &&
+-	    !(tcpinfo->invflags & XT_TCP_INV_FLAGS))
+-		return true;
+-
+-	return false;
+-}
+-
+-static bool tcpmss_tg4_check(const struct xt_tgchk_param *par)
+-{
+-	const struct xt_tcpmss_info *info = par->targinfo;
+-	const struct ipt_entry *e = par->entryinfo;
+-
+-	if (info->mss == XT_TCPMSS_CLAMP_PMTU &&
+-	    (par->hook_mask & ~((1 << NF_INET_FORWARD) |
+-			   (1 << NF_INET_LOCAL_OUT) |
+-			   (1 << NF_INET_POST_ROUTING))) != 0) {
+-		printk("xt_TCPMSS: path-MTU clamping only supported in "
+-		       "FORWARD, OUTPUT and POSTROUTING hooks\n");
+-		return false;
+-	}
+-	if (IPT_MATCH_ITERATE(e, find_syn_match))
+-		return true;
+-	printk("xt_TCPMSS: Only works on TCP SYN packets\n");
+-	return false;
+-}
+-
+-#if defined(CONFIG_IP6_NF_IPTABLES) || defined(CONFIG_IP6_NF_IPTABLES_MODULE)
+-static bool tcpmss_tg6_check(const struct xt_tgchk_param *par)
+-{
+-	const struct xt_tcpmss_info *info = par->targinfo;
+-	const struct ip6t_entry *e = par->entryinfo;
+-
+-	if (info->mss == XT_TCPMSS_CLAMP_PMTU &&
+-	    (par->hook_mask & ~((1 << NF_INET_FORWARD) |
+-			   (1 << NF_INET_LOCAL_OUT) |
+-			   (1 << NF_INET_POST_ROUTING))) != 0) {
+-		printk("xt_TCPMSS: path-MTU clamping only supported in "
+-		       "FORWARD, OUTPUT and POSTROUTING hooks\n");
+-		return false;
+-	}
+-	if (IP6T_MATCH_ITERATE(e, find_syn_match))
+-		return true;
+-	printk("xt_TCPMSS: Only works on TCP SYN packets\n");
+-	return false;
+-}
+-#endif
+-
+-static struct xt_target tcpmss_tg_reg[] __read_mostly = {
+-	{
+-		.family		= NFPROTO_IPV4,
+-		.name		= "TCPMSS",
+-		.checkentry	= tcpmss_tg4_check,
+-		.target		= tcpmss_tg4,
+-		.targetsize	= sizeof(struct xt_tcpmss_info),
+-		.proto		= IPPROTO_TCP,
+-		.me		= THIS_MODULE,
+-	},
+-#if defined(CONFIG_IP6_NF_IPTABLES) || defined(CONFIG_IP6_NF_IPTABLES_MODULE)
+-	{
+-		.family		= NFPROTO_IPV6,
+-		.name		= "TCPMSS",
+-		.checkentry	= tcpmss_tg6_check,
+-		.target		= tcpmss_tg6,
+-		.targetsize	= sizeof(struct xt_tcpmss_info),
+-		.proto		= IPPROTO_TCP,
+-		.me		= THIS_MODULE,
+-	},
+-#endif
+-};
+-
+-static int __init tcpmss_tg_init(void)
+-{
+-	return xt_register_targets(tcpmss_tg_reg, ARRAY_SIZE(tcpmss_tg_reg));
+-}
+-
+-static void __exit tcpmss_tg_exit(void)
+-{
+-	xt_unregister_targets(tcpmss_tg_reg, ARRAY_SIZE(tcpmss_tg_reg));
+-}
+-
+-module_init(tcpmss_tg_init);
+-module_exit(tcpmss_tg_exit);
+
