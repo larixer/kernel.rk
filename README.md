@@ -17,7 +17,7 @@ netfilter was borrowed from other version of mainline Linux Kernel to prevent so
 
 After using the script, this command should produce no textual difference
 ``` shell
-diff -Nur -x *.doc -x *.DOC -x *.txt -x *.dts kernel-2.6.33 path_to_hom_bot_opensource_dir/GPL/kernel-2.6.33
+diff -Nur -x *.doc -x *.DOC -x *.txt -x *.dts kernel-2.6.33 hom_bot_opensource_dir/GPL/kernel-2.6.33
 ```
 We are ignoring changes in character case of several documentation file names and the fact that Hom Bot kernel contains
  broken symlink for arch/microblaze/boot/dts/system.dts 
